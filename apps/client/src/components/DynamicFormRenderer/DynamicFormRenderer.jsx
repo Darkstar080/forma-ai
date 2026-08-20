@@ -2,6 +2,8 @@ import "./DynamicFormRenderer.css";
 
 const formSchema = {
   title: "Insurance Claim",
+  description:
+    "Provide the details below to help us understand your claim.",
   fields: [
     {
       name: "incidentType",
@@ -20,7 +22,7 @@ const formSchema = {
       label: "Vehicle",
       type: "text",
       required: true,
-      placeholder: "Enter vehicle name",
+      placeholder: "e.g. Honda Civic",
     },
     {
       name: "incidentDate",
@@ -33,7 +35,8 @@ const formSchema = {
       label: "Damage Description",
       type: "textarea",
       required: true,
-      placeholder: "Describe the damage",
+      placeholder:
+        "Briefly describe what happened and the damage caused...",
     },
   ],
 };
@@ -44,6 +47,7 @@ function DynamicFormRenderer() {
       case "text":
         return (
           <input
+            id={field.name}
             type="text"
             name={field.name}
             placeholder={field.placeholder}
@@ -54,6 +58,7 @@ function DynamicFormRenderer() {
       case "date":
         return (
           <input
+            id={field.name}
             type="date"
             name={field.name}
             required={field.required}
@@ -63,17 +68,25 @@ function DynamicFormRenderer() {
       case "textarea":
         return (
           <textarea
+            id={field.name}
             name={field.name}
             placeholder={field.placeholder}
             required={field.required}
-            rows={4}
+            rows={5}
           />
         );
 
       case "select":
         return (
-          <select name={field.name} required={field.required}>
-            <option value="">Select an option</option>
+          <select
+            id={field.name}
+            name={field.name}
+            required={field.required}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select an option
+            </option>
 
             {field.options?.map((option) => (
               <option key={option} value={option}>
@@ -90,21 +103,50 @@ function DynamicFormRenderer() {
 
   return (
     <div className="dynamic-form">
-      <h2>{formSchema.title}</h2>
+      <div className="form-header">
+        <div className="form-badge">INSURANCE CLAIM</div>
+
+        <h2>{formSchema.title}</h2>
+
+        <p>{formSchema.description}</p>
+      </div>
+
+      <div className="form-divider" />
+
+      <div className="form-section">
+        <h3>Incident Information</h3>
+        <p className="section-description">
+          Tell us about the incident and the damage involved.
+        </p>
+      </div>
 
       <form>
         {formSchema.fields.map((field) => (
           <div className="form-field" key={field.name}>
             <label htmlFor={field.name}>
               {field.label}
-              {field.required && <span> *</span>}
+              {field.required && <span className="required"> *</span>}
             </label>
 
             {renderField(field)}
           </div>
         ))}
 
-        <button type="submit">Submit Claim</button>
+        <div className="form-footer">
+            <p className="required-note">
+              <span>*</span> Required fields
+            </p>
+
+            <div className="form-actions">
+              <button type="button" className="draft-button">
+                Save as Draft
+              </button>
+
+              <button type="submit" className="submit-button">
+                Submit Claim
+              </button>
+            </div>
+          </div>
       </form>
     </div>
   );

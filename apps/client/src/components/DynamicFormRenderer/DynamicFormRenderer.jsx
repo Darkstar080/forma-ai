@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./DynamicFormRenderer.css";
 
 const formSchema = {
@@ -42,48 +43,101 @@ const formSchema = {
 };
 
 function DynamicFormRenderer() {
+  const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
+  const [draftSaved, setDraftSaved] = useState(false);
+
+  const handleChange = (fieldName, value) => {
+    setFormData((previous) => ({
+      ...previous,
+      [fieldName]: value,
+    }));
+
+    setErrors((previous) => ({
+      ...previous,
+      [fieldName]: "",
+    }));
+
+    setDraftSaved(false);
+  };
+
+  const validateForm = () => {
+    const validationErrors = {};
+
+    formSchema.fields.forEach((field) => {
+      if (
+        field.required &&
+        !String(formData[field.name] || "").trim()
+      ) {
+        validationErrors[field.name] = `${field.label} is required.`;
+      }
+    });
+
+    setErrors(validationErrors);
+
+    return Object.keys(validationErrors).length === 0;
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    console.log("Insurance Claim:", formData);
+  };
+
+  const handleSaveDraft = () => {
+    localStorage.setItem(
+      "forma-ai-claim-draft",
+      JSON.stringify(formData)
+    );
+
+    setDraftSaved(true);
+  };
+
   const renderField = (field) => {
+    const hasError = Boolean(errors[field.name]);
+
+    const commonProps = {
+      id: field.name,
+      name: field.name,
+      required: field.required,
+      value: formData[field.name] || "",
+      onChange: (event) =>
+        handleChange(field.name, event.target.value),
+      "aria-invalid": hasError,
+      "aria-describedby": hasError
+        ? `${field.name}-error`
+        : undefined,
+    };
+
     switch (field.type) {
       case "text":
         return (
           <input
-            id={field.name}
+            {...commonProps}
             type="text"
-            name={field.name}
             placeholder={field.placeholder}
-            required={field.required}
           />
         );
 
       case "date":
-        return (
-          <input
-            id={field.name}
-            type="date"
-            name={field.name}
-            required={field.required}
-          />
-        );
+        return <input {...commonProps} type="date" />;
 
       case "textarea":
         return (
           <textarea
-            id={field.name}
-            name={field.name}
+            {...commonProps}
             placeholder={field.placeholder}
-            required={field.required}
             rows={5}
           />
         );
 
       case "select":
         return (
-          <select
-            id={field.name}
-            name={field.name}
-            required={field.required}
-            defaultValue=""
-          >
+          <select {...commonProps}>
             <option value="" disabled>
               Select an option
             </option>
@@ -115,38 +169,68 @@ function DynamicFormRenderer() {
 
       <div className="form-section">
         <h3>Incident Information</h3>
+
         <p className="section-description">
           Tell us about the incident and the damage involved.
         </p>
       </div>
 
-      <form>
+      <form onSubmit={handleSubmit} noValidate>
         {formSchema.fields.map((field) => (
-          <div className="form-field" key={field.name}>
+          <div
+            className={`form-field ${
+              errors[field.name] ? "field-error" : ""
+            }`}
+            key={field.name}
+          >
             <label htmlFor={field.name}>
               {field.label}
-              {field.required && <span className="required"> *</span>}
+
+              {field.required && (
+                <span className="required"> *</span>
+              )}
             </label>
 
             {renderField(field)}
+
+            {errors[field.name] && (
+              <p
+                id={`${field.name}-error`}
+                className="error-message"
+              >
+                {errors[field.name]}
+              </p>
+            )}
           </div>
         ))}
 
         <div className="form-footer">
+          <div>
             <p className="required-note">
               <span>*</span> Required fields
             </p>
 
-            <div className="form-actions">
-              <button type="button" className="draft-button">
-                Save as Draft
-              </button>
-
-              <button type="submit" className="submit-button">
-                Submit Claim
-              </button>
-            </div>
+            {draftSaved && (
+              <p className="draft-message">
+                Draft saved successfully.
+              </p>
+            )}
           </div>
+
+          <div className="form-actions">
+            <button
+              type="button"
+              className="draft-button"
+              onClick={handleSaveDraft}
+            >
+              Save as Draft
+            </button>
+
+            <button type="submit" className="submit-button">
+              Submit Claim
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

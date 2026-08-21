@@ -8,4 +8,5 @@
 // TODO Week 2: define the LLM extraction output shape
 // export const ExtractionResult = { ... }
 
+export { evaluateConditions } from "./conditions.js";
 export const SCHEMA_VERSION = "0.1.0";

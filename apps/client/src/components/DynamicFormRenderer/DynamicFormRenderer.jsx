@@ -219,16 +219,16 @@ function DynamicFormRenderer() {
 
           <div className="form-actions">
             <button
-              type="button"
-              className="draft-button"
-              onClick={handleSaveDraft}
-            >
-              Save as Draft
-            </button>
+  type="button"
+  className="draft-button"
+  onClick={handleSaveDraft}
+>
+  Save & Continue
+</button>
 
-            <button type="submit" className="submit-button">
-              Submit Claim
-            </button>
+<button type="submit" className="submit-button">
+  Continue
+</button>
           </div>
         </div>
       </form>

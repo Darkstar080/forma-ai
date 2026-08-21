@@ -8,7 +8,10 @@ function App() {
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>Forma AI</h1>
-      <DynamicFormRenderer />
+      <DynamicFormRenderer
+        formId="auto_insurance_claim_v1"
+        description="Provide the details below to help us understand your claim."
+      />
     </div>
   );
 }

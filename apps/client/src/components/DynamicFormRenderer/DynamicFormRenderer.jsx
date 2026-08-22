@@ -16,6 +16,7 @@ const formSchema = {
         "Animal Collision",
         "Theft",
         "Weather Damage",
+        "other",
       ],
     },
     {
@@ -39,6 +40,17 @@ const formSchema = {
       placeholder:
         "Briefly describe what happened and the damage caused...",
     },
+    {
+  name: "otherIncident",
+  label: "Describe the Incident",
+  type: "textarea",
+  required: true,
+  placeholder: "Please describe the incident...",
+  showIf: {
+    field: "incidentType",
+    value: "Other",
+  },
+},
   ],
 };
 

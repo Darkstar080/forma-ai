@@ -1,4 +1,5 @@
 import "./Home.css";
+import Footer from "./Footer";
 import {
   HeroSection,
   QuickActions,
@@ -7,7 +8,6 @@ import {
   ClaimPreview,
   TrustSection,
   CTASection,
-  Footer,
 } from "./HomeSections";
 
 function Home({ children }) {

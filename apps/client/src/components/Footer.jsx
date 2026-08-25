@@ -51,7 +51,13 @@ function Footer() {
               Support
             </button>
 
-            <a href="#contact">Contact</a>
+            <button
+              type="button"
+              className="footer-action"
+              onClick={() => setActiveModal("contact")}
+            >
+              Contact
+            </button>
           </div>
 
           <div className="footer-column">
@@ -69,7 +75,6 @@ function Footer() {
             <a href="#security">Security</a>
           </div>
 
-          {/* Subscription */}
           <div className="footer-subscribe">
             <span className="footer-subscribe-label">
               STAY IN THE LOOP
@@ -124,7 +129,6 @@ function Footer() {
         </div>
       </footer>
 
-      {/* Modal */}
       {activeModal && (
         <div
           className="footer-modal-overlay"
@@ -143,7 +147,7 @@ function Footer() {
               ×
             </button>
 
-            {activeModal === "support" ? (
+            {activeModal === "support" && (
               <>
                 <span className="footer-modal-label">
                   SUPPORT
@@ -170,7 +174,9 @@ function Footer() {
                   Got it
                 </button>
               </>
-            ) : (
+            )}
+
+            {activeModal === "privacy" && (
               <>
                 <span className="footer-modal-label">
                   PRIVACY
@@ -189,6 +195,41 @@ function Footer() {
                   <span>✓ Clear information handling</span>
                   <span>✓ User-controlled claim details</span>
                   <span>✓ Transparent AI assistance</span>
+                </div>
+
+                <button
+                  type="button"
+                  className="footer-modal-button"
+                  onClick={() => setActiveModal(null)}
+                >
+                  Close
+                </button>
+              </>
+            )}
+
+            {activeModal === "contact" && (
+              <>
+                <span className="footer-modal-label">
+                  CONTACT
+                </span>
+
+                <h3>We'd love to hear from you.</h3>
+
+                <p>
+                  Have a question, suggestion, or want to learn
+                  more about Forma AI? Reach out to our team.
+                </p>
+
+                <div className="footer-contact-card">
+                  <div>
+                    <span>General</span>
+                    <strong>hello@forma.ai</strong>
+                  </div>
+
+                  <div>
+                    <span>Support</span>
+                    <strong>support@forma.ai</strong>
+                  </div>
                 </div>
 
                 <button

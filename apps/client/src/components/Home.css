@@ -134,6 +134,49 @@
 }
 
 /* =========================
+   MOBILE NAVIGATION
+========================= */
+
+.mobile-menu-button {
+  display: none;
+
+  width: 38px;
+  height: 38px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--forma-border);
+  border-radius: 9px;
+
+  background: var(--forma-white);
+  color: var(--forma-dark);
+
+  font-size: 19px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.mobile-menu-button:hover {
+  background: #eeebe3;
+  border-color: #ccc7bc;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+.mobile-nav a,
+.mobile-nav-cta {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================
    SHARED
 ========================= */
 
@@ -877,6 +920,79 @@
     display: none;
   }
 
+  .forma-nav-cta {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .mobile-nav {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto 14px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 10px;
+
+    border: 1px solid var(--forma-border);
+    border-radius: 14px;
+
+    background: var(--forma-white);
+
+    box-shadow: 0 12px 30px rgba(30, 30, 25, 0.08);
+
+    animation: mobileMenuIn 0.18s ease-out;
+  }
+
+  .mobile-nav a {
+    padding: 12px 13px;
+
+    border-radius: 8px;
+
+    color: #5f605b;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .mobile-nav a:hover {
+    background: #f6f3ec;
+    color: var(--forma-dark);
+  }
+
+  .mobile-nav-cta {
+    margin-top: 6px;
+    padding: 12px 14px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: var(--forma-coral);
+    color: white;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .mobile-nav-cta:hover {
+    background: var(--forma-coral-dark);
+    transform: translateY(-1px);
+  }
+
   .quick-grid,
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -888,16 +1004,24 @@
   }
 }
 
+@keyframes mobileMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 650px) {
   .forma-navbar-inner,
   .section-container,
   .quick-actions-inner,
   .footer-inner {
     width: calc(100% - 32px);
-  }
-
-  .forma-nav-cta {
-    padding: 9px 14px;
   }
 
   .home-hero {

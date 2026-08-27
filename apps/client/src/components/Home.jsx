@@ -1,4 +1,5 @@
 import "./Home.css";
+import { Link } from "react-router-dom";
 import {
   HeroSection,
   QuickActions,
@@ -26,7 +27,7 @@ function Home({ children }) {
             <a href="#support">Support</a>
           </nav>
 
-          <button className="forma-nav-cta">Start a claim</button>
+          <Link to="/claim" className="forma-nav-cta">Start a claim</Link>
         </div>
       </header>
 

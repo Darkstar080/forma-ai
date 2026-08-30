@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Home.css";
 import Footer from "./Footer";
 import ScrollToTop from "./ScrollToTop";
+import { Link } from "react-router-dom";
 
 import {
   HeroSection,
@@ -20,14 +21,6 @@ function Home({ children }) {
     setMobileMenuOpen(false);
   };
 
-  const scrollToClaim = () => {
-    document
-      .querySelector(".existing-form-section")
-      ?.scrollIntoView({ behavior: "smooth" });
-
-    closeMobileMenu();
-  };
-
   return (
     <div className="forma-home">
       <header className="forma-navbar">
@@ -43,13 +36,9 @@ function Home({ children }) {
             <a href="#support">Support</a>
           </nav>
 
-          <button
-            type="button"
-            className="forma-nav-cta"
-            onClick={scrollToClaim}
-          >
+          <Link to="/claim" className="forma-nav-cta">
             Start a claim
-          </button>
+          </Link>
 
           <button
             type="button"
@@ -80,13 +69,13 @@ function Home({ children }) {
               Support
             </a>
 
-            <button
-              type="button"
+            <Link
+              to="/claim"
               className="mobile-nav-cta"
-              onClick={scrollToClaim}
+              onClick={closeMobileMenu}
             >
               Start a claim →
-            </button>
+            </Link>
           </div>
         )}
       </header>

@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import schemaRoutes from "./routes/schemas.js";
 import mongoose from "mongoose";
+import extractRoutes from "./routes/extract.js";
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/schemas", schemaRoutes);
+app.use("/api/extract", extractRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });

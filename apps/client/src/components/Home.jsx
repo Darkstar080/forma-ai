@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Home.css";
 import Footer from "./Footer";
+import ScrollToTop from "./ScrollToTop";
 
 import {
   HeroSection,
@@ -35,7 +36,6 @@ function Home({ children }) {
             Forma<span>AI</span>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="forma-nav">
             <a href="#how-it-works">How it works</a>
             <a href="#features">Features</a>
@@ -44,13 +44,13 @@ function Home({ children }) {
           </nav>
 
           <button
+            type="button"
             className="forma-nav-cta"
             onClick={scrollToClaim}
           >
             Start a claim
           </button>
 
-          {/* Mobile Menu Button */}
           <button
             type="button"
             className="mobile-menu-button"
@@ -62,34 +62,21 @@ function Home({ children }) {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="mobile-nav">
-            <a
-              href="#how-it-works"
-              onClick={closeMobileMenu}
-            >
+            <a href="#how-it-works" onClick={closeMobileMenu}>
               How it works
             </a>
 
-            <a
-              href="#features"
-              onClick={closeMobileMenu}
-            >
+            <a href="#features" onClick={closeMobileMenu}>
               Features
             </a>
 
-            <a
-              href="#claims"
-              onClick={closeMobileMenu}
-            >
+            <a href="#claims" onClick={closeMobileMenu}>
               Claims
             </a>
 
-            <a
-              href="#support"
-              onClick={closeMobileMenu}
-            >
+            <a href="#support" onClick={closeMobileMenu}>
               Support
             </a>
 
@@ -106,26 +93,22 @@ function Home({ children }) {
 
       <main>
         <HeroSection />
-
         <QuickActions />
-
         <HowItWorks />
-
         <FeaturesSection />
-
         <ClaimPreview />
 
-        {/* Existing team-owned form */}
         <section className="existing-form-section">
           {children}
         </section>
 
         <TrustSection />
-
         <CTASection />
       </main>
 
       <Footer />
+
+      <ScrollToTop />
     </div>
   );
 }

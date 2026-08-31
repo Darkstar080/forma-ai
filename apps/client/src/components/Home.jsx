@@ -36,7 +36,7 @@ function Home({ children }) {
             <a href="#support">Support</a>
           </nav>
 
-          <Link to="/claim" className="forma-nav-cta">
+<Link to="/claim" className="forma-nav-cta">
             Start a claim
           </Link>
 

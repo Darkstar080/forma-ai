@@ -1506,3 +1506,122 @@
     transition-duration: 0.01ms !important;
   }
 }
+/* =========================
+   THEME TOGGLE
+========================= */
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e5eb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #202632;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.forma-home.dark-mode {
+  --bg-primary: #0d1117;
+  --bg-secondary: #151b24;
+  --bg-card: #181f2a;
+  --text-primary: #f5f7fa;
+  --text-secondary: #a7b0bf;
+  --border-color: #293241;
+  --input-bg: #111722;
+  --accent: #5b82ff;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode .forma-navbar {
+  background: rgba(13, 17, 23, 0.92);
+  border-bottom-color: var(--border-color);
+}
+
+.forma-home.dark-mode .forma-nav a {
+  color: var(--text-secondary);
+}
+
+.forma-home.dark-mode .forma-logo {
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode .forma-nav-cta,
+.forma-home.dark-mode .mobile-nav-cta {
+  background: var(--accent);
+}
+
+.forma-home.dark-mode .theme-toggle {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: #ffd76a;
+}
+
+.forma-home.dark-mode .forma-home-section,
+.forma-home.dark-mode .forma-card,
+.forma-home.dark-mode .forma-feature-card,
+.forma-home.dark-mode .forma-claim-preview,
+.forma-home.dark-mode .forma-trust-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode p {
+  color: var(--text-secondary);
+}
+
+.forma-home.dark-mode h1,
+.forma-home.dark-mode h2,
+.forma-home.dark-mode h3,
+.forma-home.dark-mode h4 {
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode input,
+.forma-home.dark-mode textarea,
+.forma-home.dark-mode select {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.forma-home.dark-mode .mobile-nav {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+.forma-home.dark-mode .mobile-nav a {
+  color: var(--text-secondary);
+}
+
+.forma-home.dark-mode .forma-footer {
+  background: #080b10;
+}
+
+.forma-home.dark-mode .forma-footer a,
+.forma-home.dark-mode .forma-footer p {
+  color: #8993a3;
+}
+
+/* Smooth theme transition */
+
+.forma-home,
+.forma-home * {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}

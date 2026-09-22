@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Home.css";
 import Footer from "./Footer";
 import ScrollToTop from "./ScrollToTop";
@@ -13,6 +13,51 @@ import {
   TrustSection,
   CTASection,
 } from "./HomeSections";
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+
+function ScrollReveal({ children, className = "" }) {
+  const revealRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = revealRef.current;
+
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(element);
+        }
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -60px 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div
+      ref={revealRef}
+      className={`forma-reveal ${
+        isVisible ? "is-visible" : ""
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 function Home({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -34,11 +79,14 @@ function Home({ children }) {
   };
 
   return (
-    <div className={`forma-home ${darkMode ? "dark-mode" : "light-mode"}`}>
+    <div
+      className={`forma-home ${
+        darkMode ? "dark-mode" : "light-mode"
+      }`}
+    >
       <style>{`
         /* =====================================================
            FORMA AI GLOBAL DARK / LIGHT THEME
-           Applies to the complete existing homepage
         ===================================================== */
 
         .forma-home {
@@ -550,7 +598,9 @@ function Home({ children }) {
               className="forma-theme-toggle"
               onClick={toggleTheme}
               aria-label={
-                darkMode ? "Switch to light mode" : "Switch to dark mode"
+                darkMode
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
               }
               title={darkMode ? "Light mode" : "Dark mode"}
             >
@@ -565,8 +615,12 @@ function Home({ children }) {
           <button
             type="button"
             className="mobile-menu-button"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            onClick={() =>
+              setMobileMenuOpen((open) => !open)
+            }
+            aria-label={
+              mobileMenuOpen ? "Close menu" : "Open menu"
+            }
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? "×" : "☰"}
@@ -575,19 +629,31 @@ function Home({ children }) {
 
         {mobileMenuOpen && (
           <div className="mobile-nav">
-            <a href="#how-it-works" onClick={closeMobileMenu}>
+            <a
+              href="#how-it-works"
+              onClick={closeMobileMenu}
+            >
               How it works
             </a>
 
-            <a href="#features" onClick={closeMobileMenu}>
+            <a
+              href="#features"
+              onClick={closeMobileMenu}
+            >
               Features
             </a>
 
-            <a href="#claims" onClick={closeMobileMenu}>
+            <a
+              href="#claims"
+              onClick={closeMobileMenu}
+            >
               Claims
             </a>
 
-            <a href="#support" onClick={closeMobileMenu}>
+            <a
+              href="#support"
+              onClick={closeMobileMenu}
+            >
               Support
             </a>
 
@@ -596,7 +662,9 @@ function Home({ children }) {
               className="forma-mobile-theme"
               onClick={toggleTheme}
             >
-              {darkMode ? "☀  Light mode" : "☾  Dark mode"}
+              {darkMode
+                ? "☀  Light mode"
+                : "☾  Dark mode"}
             </button>
 
             <Link
@@ -611,23 +679,39 @@ function Home({ children }) {
       </header>
 
       <main>
-        <HeroSection />
+        <ScrollReveal className="forma-reveal-hero">
+          <HeroSection />
+        </ScrollReveal>
 
-        <QuickActions />
+        <ScrollReveal className="forma-reveal-delay-1">
+          <QuickActions />
+        </ScrollReveal>
 
-        <HowItWorks />
+        <ScrollReveal className="forma-reveal-delay-2">
+          <HowItWorks />
+        </ScrollReveal>
 
-        <FeaturesSection />
+        <ScrollReveal className="forma-reveal-delay-3">
+          <FeaturesSection />
+        </ScrollReveal>
 
-        <ClaimPreview />
+        <ScrollReveal className="forma-reveal-delay-4">
+          <ClaimPreview />
+        </ScrollReveal>
 
-        <section className="existing-form-section">
-          {children}
-        </section>
+        <ScrollReveal className="forma-reveal-delay-5">
+          <section className="existing-form-section">
+            {children}
+          </section>
+        </ScrollReveal>
 
-        <TrustSection />
+        <ScrollReveal className="forma-reveal-delay-6">
+          <TrustSection />
+        </ScrollReveal>
 
-        <CTASection />
+        <ScrollReveal className="forma-reveal-delay-7">
+          <CTASection />
+        </ScrollReveal>
       </main>
 
       <Footer />

@@ -1754,3 +1754,474 @@
     transition: none !important;
   }
 }
+/* =========================================================
+   MOBILE HOMEPAGE POLISH
+   Additional responsive improvements
+   Does not change desktop layout
+========================================================= */
+
+@media (max-width: 650px) {
+  /* ---------- Global mobile safety ---------- */
+
+  .forma-home {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .forma-home main {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* ---------- Navbar ---------- */
+
+  .forma-navbar-inner {
+    height: 64px;
+    width: calc(100% - 24px);
+  }
+
+  .forma-logo {
+    font-size: 21px;
+  }
+
+  .mobile-menu-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mobile-nav {
+    width: calc(100% - 24px);
+    margin-bottom: 10px;
+    padding: 8px;
+
+    border-radius: 12px;
+  }
+
+  .mobile-nav a {
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 11px 12px;
+  }
+
+  .forma-mobile-theme {
+    min-height: 44px;
+  }
+
+  .mobile-nav-cta {
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---------- Hero ---------- */
+
+  .home-hero {
+    width: 100%;
+    min-height: auto;
+
+    padding: 64px 16px 72px;
+  }
+
+  .hero-content {
+    width: 100%;
+  }
+
+  .hero-content h1 {
+    max-width: 360px;
+    margin: 14px auto 0;
+
+    font-size: clamp(42px, 12vw, 52px);
+    line-height: 0.98;
+    letter-spacing: -0.065em;
+  }
+
+  .hero-description {
+    max-width: 340px;
+    margin: 20px auto 30px;
+
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .story-card {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 15px;
+
+    border-radius: 14px;
+  }
+
+  .story-card-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .story-input {
+    min-height: 110px;
+    padding: 14px;
+
+    font-size: 13px;
+  }
+
+  .story-card-bottom {
+    gap: 12px;
+  }
+
+  .hero-footnote {
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+
+    line-height: 1.5;
+  }
+
+  /* ---------- Shared sections ---------- */
+
+  .section-container,
+  .quick-actions-inner,
+  .footer-inner {
+    width: calc(100% - 32px);
+  }
+
+  .section-heading h2,
+  .features-header h2,
+  .claim-preview-heading h2,
+  .trust-section h2,
+  .cta-card h2 {
+    font-size: clamp(32px, 9vw, 42px);
+    line-height: 1.05;
+  }
+
+  /* ---------- Quick actions ---------- */
+
+  .quick-actions {
+    padding: 55px 0;
+  }
+
+  .quick-intro {
+    gap: 10px;
+  }
+
+  .quick-intro h2 {
+    font-size: 20px;
+  }
+
+  .quick-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    margin-top: 22px;
+  }
+
+  .quick-card {
+    min-height: auto;
+
+    padding: 18px;
+
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .quick-card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* ---------- How it works ---------- */
+
+  .how-section {
+    padding: 75px 0;
+  }
+
+  .section-heading {
+    margin-bottom: 35px;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-item,
+  .step-item:first-child {
+    min-height: auto;
+
+    padding: 28px 0;
+
+    border-left: 0;
+    border-top: 1px solid var(--forma-border);
+  }
+
+  .step-item:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .step-item h3 {
+    margin: 22px 0 9px;
+
+    font-size: 18px;
+  }
+
+  .step-item p {
+    max-width: 100%;
+
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  /* ---------- Features ---------- */
+
+  .features-section {
+    padding: 75px 0;
+  }
+
+  .features-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-bottom: 30px;
+  }
+
+  .features-header > p {
+    max-width: 100%;
+
+    font-size: 12px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .feature-card {
+    min-height: 185px;
+
+    padding: 20px;
+  }
+
+  .feature-card h3 {
+    margin: 35px 0 9px;
+
+    font-size: 16px;
+  }
+
+  .feature-card p {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  /* ---------- Claim preview ---------- */
+
+  .claim-preview-section {
+    padding: 80px 0;
+  }
+
+  .claim-preview-heading {
+    margin-bottom: 30px;
+  }
+
+  .claim-preview-heading > p:last-child {
+    max-width: 100%;
+
+    margin-top: 16px;
+
+    font-size: 12px;
+  }
+
+  .claim-preview-card {
+    padding: 18px;
+
+    border-radius: 12px;
+  }
+
+  .claim-preview-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .claim-preview-top h3 {
+    font-size: 17px;
+  }
+
+  .claim-progress-value {
+    font-size: 20px;
+  }
+
+  .claim-preview-bottom {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .claim-preview-bottom button {
+    width: 100%;
+    padding: 11px;
+
+    border: 1px solid rgba(232, 93, 63, 0.18);
+    border-radius: 8px;
+
+    background: rgba(232, 93, 63, 0.05);
+  }
+
+  /* ---------- Existing form preview ---------- */
+
+  .form-preview {
+    padding: 18px;
+
+    border-radius: 12px;
+  }
+
+  .form-preview-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-preview-header h3 {
+    font-size: 18px;
+  }
+
+  .preview-fields {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .preview-fields > div {
+    padding: 15px;
+  }
+
+  /* ---------- Trust ---------- */
+
+  .trust-section {
+    padding: 75px 0;
+  }
+
+  .trust-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .trust-description {
+    max-width: 100%;
+
+    margin-top: 18px;
+
+    font-size: 12px;
+  }
+
+  .trust-list > div {
+    padding: 17px 0;
+  }
+
+  .trust-list strong {
+    font-size: 12px;
+  }
+
+  .trust-list p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  /* ---------- CTA ---------- */
+
+  .cta-section {
+    padding: 70px 16px;
+  }
+
+  .cta-card {
+    width: 100%;
+
+    padding: 52px 20px;
+
+    border-radius: 15px;
+  }
+
+  .cta-card > p:not(.eyebrow) {
+    max-width: 310px;
+
+    margin: 16px auto 24px;
+
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .cta-card .primary-action {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  /* ---------- Better touch interaction ---------- */
+
+  .quick-card,
+  .feature-card,
+  .claim-preview-card,
+  .story-card {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Disable large desktop hover movement on touch screens */
+
+  .quick-card:hover,
+  .feature-card:hover,
+  .claim-preview-card:hover,
+  .story-card:hover,
+  .cta-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 380px) {
+  .forma-navbar-inner {
+    width: calc(100% - 20px);
+  }
+
+  .forma-logo {
+    font-size: 20px;
+  }
+
+  .home-hero {
+    padding-top: 52px;
+  }
+
+  .hero-content h1 {
+    font-size: 40px;
+  }
+
+  .hero-description {
+    font-size: 12px;
+  }
+
+  .quick-actions-inner,
+  .section-container,
+  .footer-inner {
+    width: calc(100% - 24px);
+  }
+
+  .quick-card {
+    padding: 15px;
+  }
+
+  .feature-card {
+    padding: 17px;
+  }
+
+  .claim-preview-card {
+    padding: 15px;
+  }
+
+  .cta-card {
+    padding: 45px 16px;
+  }
+}

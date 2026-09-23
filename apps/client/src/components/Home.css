@@ -1506,3 +1506,722 @@
     transition-duration: 0.01ms !important;
   }
 }
+/* =========================
+   THEME TOGGLE
+========================= */
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e5eb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #202632;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.forma-home.dark-mode {
+  --bg-primary: #0d1117;
+  --bg-secondary: #151b24;
+  --bg-card: #181f2a;
+  --text-primary: #f5f7fa;
+  --text-secondary: #a7b0bf;
+  --border-color: #293241;
+  --input-bg: #111722;
+  --accent: #5b82ff;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode .forma-navbar {
+  background: rgba(13, 17, 23, 0.92);
+  border-bottom-color: var(--border-color);
+}
+
+.forma-home.dark-mode .forma-nav a {
+  color: var(--text-secondary);
+}
+
+.forma-home.dark-mode .forma-logo {
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode .forma-nav-cta,
+.forma-home.dark-mode .mobile-nav-cta {
+  background: var(--accent);
+}
+
+.forma-home.dark-mode .theme-toggle {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: #ffd76a;
+}
+
+.forma-home.dark-mode .forma-home-section,
+.forma-home.dark-mode .forma-card,
+.forma-home.dark-mode .forma-feature-card,
+.forma-home.dark-mode .forma-claim-preview,
+.forma-home.dark-mode .forma-trust-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode p {
+  color: var(--text-secondary);
+}
+
+.forma-home.dark-mode h1,
+.forma-home.dark-mode h2,
+.forma-home.dark-mode h3,
+.forma-home.dark-mode h4 {
+  color: var(--text-primary);
+}
+
+.forma-home.dark-mode input,
+.forma-home.dark-mode textarea,
+.forma-home.dark-mode select {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.forma-home.dark-mode .mobile-nav {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+.forma-home.dark-mode .mobile-nav a {
+  color: var(--text-secondary);
+}
+
+.forma-home.dark-mode .forma-footer {
+  background: #080b10;
+}
+
+.forma-home.dark-mode .forma-footer a,
+.forma-home.dark-mode .forma-footer p {
+  color: #8993a3;
+}
+
+/* Smooth theme transition */
+
+.forma-home,
+.forma-home * {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* =========================
+   SCROLL REVEAL SYSTEM
+========================= */
+
+.forma-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+
+  transition:
+    opacity 0.75s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.forma-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero appears immediately */
+.forma-reveal-hero {
+  opacity: 1;
+  transform: none;
+}
+
+/* Section timing */
+.forma-reveal-delay-1 {
+  transition-delay: 40ms;
+}
+
+.forma-reveal-delay-2 {
+  transition-delay: 80ms;
+}
+
+.forma-reveal-delay-3 {
+  transition-delay: 120ms;
+}
+
+.forma-reveal-delay-4 {
+  transition-delay: 160ms;
+}
+
+.forma-reveal-delay-5 {
+  transition-delay: 200ms;
+}
+
+.forma-reveal-delay-6 {
+  transition-delay: 240ms;
+}
+
+.forma-reveal-delay-7 {
+  transition-delay: 280ms;
+}
+
+/* =========================
+   CHILD CARD REVEAL
+========================= */
+
+.forma-reveal.is-visible .quick-card,
+.forma-reveal.is-visible .feature-card,
+.forma-reveal.is-visible .step-item,
+.forma-reveal.is-visible .claim-preview-card,
+.forma-reveal.is-visible .trust-list > div {
+  animation: formaChildReveal
+    0.65s
+    cubic-bezier(0.2, 0.7, 0.2, 1)
+    both;
+}
+
+.forma-reveal.is-visible .quick-card:nth-child(2),
+.forma-reveal.is-visible .feature-card:nth-child(2),
+.forma-reveal.is-visible .step-item:nth-child(2),
+.forma-reveal.is-visible .trust-list > div:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.forma-reveal.is-visible .quick-card:nth-child(3),
+.forma-reveal.is-visible .feature-card:nth-child(3),
+.forma-reveal.is-visible .step-item:nth-child(3),
+.forma-reveal.is-visible .trust-list > div:nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.forma-reveal.is-visible .feature-card:nth-child(4),
+.forma-reveal.is-visible .trust-list > div:nth-child(4) {
+  animation-delay: 240ms;
+}
+
+@keyframes formaChildReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .forma-reveal {
+    transform: translateY(20px);
+
+    transition-duration: 0.6s;
+  }
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .forma-reveal,
+  .forma-reveal.is-visible .quick-card,
+  .forma-reveal.is-visible .feature-card,
+  .forma-reveal.is-visible .step-item,
+  .forma-reveal.is-visible .claim-preview-card,
+  .forma-reveal.is-visible .trust-list > div {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+/* =========================================================
+   MOBILE HOMEPAGE POLISH
+   Additional responsive improvements
+   Does not change desktop layout
+========================================================= */
+
+@media (max-width: 650px) {
+  /* ---------- Global mobile safety ---------- */
+
+  .forma-home {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .forma-home main {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* ---------- Navbar ---------- */
+
+  .forma-navbar-inner {
+    height: 64px;
+    width: calc(100% - 24px);
+  }
+
+  .forma-logo {
+    font-size: 21px;
+  }
+
+  .mobile-menu-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mobile-nav {
+    width: calc(100% - 24px);
+    margin-bottom: 10px;
+    padding: 8px;
+
+    border-radius: 12px;
+  }
+
+  .mobile-nav a {
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 11px 12px;
+  }
+
+  .forma-mobile-theme {
+    min-height: 44px;
+  }
+
+  .mobile-nav-cta {
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---------- Hero ---------- */
+
+  .home-hero {
+    width: 100%;
+    min-height: auto;
+
+    padding: 64px 16px 72px;
+  }
+
+  .hero-content {
+    width: 100%;
+  }
+
+  .hero-content h1 {
+    max-width: 360px;
+    margin: 14px auto 0;
+
+    font-size: clamp(42px, 12vw, 52px);
+    line-height: 0.98;
+    letter-spacing: -0.065em;
+  }
+
+  .hero-description {
+    max-width: 340px;
+    margin: 20px auto 30px;
+
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .story-card {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 15px;
+
+    border-radius: 14px;
+  }
+
+  .story-card-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .story-input {
+    min-height: 110px;
+    padding: 14px;
+
+    font-size: 13px;
+  }
+
+  .story-card-bottom {
+    gap: 12px;
+  }
+
+  .hero-footnote {
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+
+    line-height: 1.5;
+  }
+
+  /* ---------- Shared sections ---------- */
+
+  .section-container,
+  .quick-actions-inner,
+  .footer-inner {
+    width: calc(100% - 32px);
+  }
+
+  .section-heading h2,
+  .features-header h2,
+  .claim-preview-heading h2,
+  .trust-section h2,
+  .cta-card h2 {
+    font-size: clamp(32px, 9vw, 42px);
+    line-height: 1.05;
+  }
+
+  /* ---------- Quick actions ---------- */
+
+  .quick-actions {
+    padding: 55px 0;
+  }
+
+  .quick-intro {
+    gap: 10px;
+  }
+
+  .quick-intro h2 {
+    font-size: 20px;
+  }
+
+  .quick-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    margin-top: 22px;
+  }
+
+  .quick-card {
+    min-height: auto;
+
+    padding: 18px;
+
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .quick-card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* ---------- How it works ---------- */
+
+  .how-section {
+    padding: 75px 0;
+  }
+
+  .section-heading {
+    margin-bottom: 35px;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-item,
+  .step-item:first-child {
+    min-height: auto;
+
+    padding: 28px 0;
+
+    border-left: 0;
+    border-top: 1px solid var(--forma-border);
+  }
+
+  .step-item:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .step-item h3 {
+    margin: 22px 0 9px;
+
+    font-size: 18px;
+  }
+
+  .step-item p {
+    max-width: 100%;
+
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  /* ---------- Features ---------- */
+
+  .features-section {
+    padding: 75px 0;
+  }
+
+  .features-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-bottom: 30px;
+  }
+
+  .features-header > p {
+    max-width: 100%;
+
+    font-size: 12px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .feature-card {
+    min-height: 185px;
+
+    padding: 20px;
+  }
+
+  .feature-card h3 {
+    margin: 35px 0 9px;
+
+    font-size: 16px;
+  }
+
+  .feature-card p {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  /* ---------- Claim preview ---------- */
+
+  .claim-preview-section {
+    padding: 80px 0;
+  }
+
+  .claim-preview-heading {
+    margin-bottom: 30px;
+  }
+
+  .claim-preview-heading > p:last-child {
+    max-width: 100%;
+
+    margin-top: 16px;
+
+    font-size: 12px;
+  }
+
+  .claim-preview-card {
+    padding: 18px;
+
+    border-radius: 12px;
+  }
+
+  .claim-preview-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .claim-preview-top h3 {
+    font-size: 17px;
+  }
+
+  .claim-progress-value {
+    font-size: 20px;
+  }
+
+  .claim-preview-bottom {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .claim-preview-bottom button {
+    width: 100%;
+    padding: 11px;
+
+    border: 1px solid rgba(232, 93, 63, 0.18);
+    border-radius: 8px;
+
+    background: rgba(232, 93, 63, 0.05);
+  }
+
+  /* ---------- Existing form preview ---------- */
+
+  .form-preview {
+    padding: 18px;
+
+    border-radius: 12px;
+  }
+
+  .form-preview-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-preview-header h3 {
+    font-size: 18px;
+  }
+
+  .preview-fields {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .preview-fields > div {
+    padding: 15px;
+  }
+
+  /* ---------- Trust ---------- */
+
+  .trust-section {
+    padding: 75px 0;
+  }
+
+  .trust-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .trust-description {
+    max-width: 100%;
+
+    margin-top: 18px;
+
+    font-size: 12px;
+  }
+
+  .trust-list > div {
+    padding: 17px 0;
+  }
+
+  .trust-list strong {
+    font-size: 12px;
+  }
+
+  .trust-list p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  /* ---------- CTA ---------- */
+
+  .cta-section {
+    padding: 70px 16px;
+  }
+
+  .cta-card {
+    width: 100%;
+
+    padding: 52px 20px;
+
+    border-radius: 15px;
+  }
+
+  .cta-card > p:not(.eyebrow) {
+    max-width: 310px;
+
+    margin: 16px auto 24px;
+
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .cta-card .primary-action {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  /* ---------- Better touch interaction ---------- */
+
+  .quick-card,
+  .feature-card,
+  .claim-preview-card,
+  .story-card {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Disable large desktop hover movement on touch screens */
+
+  .quick-card:hover,
+  .feature-card:hover,
+  .claim-preview-card:hover,
+  .story-card:hover,
+  .cta-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 380px) {
+  .forma-navbar-inner {
+    width: calc(100% - 20px);
+  }
+
+  .forma-logo {
+    font-size: 20px;
+  }
+
+  .home-hero {
+    padding-top: 52px;
+  }
+
+  .hero-content h1 {
+    font-size: 40px;
+  }
+
+  .hero-description {
+    font-size: 12px;
+  }
+
+  .quick-actions-inner,
+  .section-container,
+  .footer-inner {
+    width: calc(100% - 24px);
+  }
+
+  .quick-card {
+    padding: 15px;
+  }
+
+  .feature-card {
+    padding: 17px;
+  }
+
+  .claim-preview-card {
+    padding: 15px;
+  }
+
+  .cta-card {
+    padding: 45px 16px;
+  }
+}

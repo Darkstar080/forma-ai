@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function HeroSection() {
   return (
     <section className="home-hero">
@@ -30,9 +32,9 @@ function HeroSection() {
           <div className="story-card-bottom">
             <span>Describe your situation naturally.</span>
 
-            <button className="primary-action">
+            <Link to="/claim/ai" className="primary-action">
               Start a claim <span>→</span>
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -54,30 +56,38 @@ function QuickActions() {
         </div>
 
         <div className="quick-grid">
-          <div className="quick-card">
+          <Link to="/claim/ai" className="quick-card">
             <div className="quick-icon">+</div>
+
             <div>
               <h3>Start a new claim</h3>
-              <p>Tell us what happened and we'll guide you through it.</p>
+              <p>
+                Tell us what happened and we'll guide you through it.
+              </p>
             </div>
+
             <span className="arrow">→</span>
-          </div>
+          </Link>
 
           <div className="quick-card">
             <div className="quick-icon">↗</div>
+
             <div>
               <h3>Continue a claim</h3>
               <p>Pick up where you left off with a saved draft.</p>
             </div>
+
             <span className="arrow">→</span>
           </div>
 
           <div className="quick-card">
             <div className="quick-icon">○</div>
+
             <div>
               <h3>View my claims</h3>
               <p>Check the status of your existing claims.</p>
             </div>
+
             <span className="arrow">→</span>
           </div>
         </div>
@@ -297,6 +307,7 @@ function TrustSection() {
         <div className="trust-list">
           <div>
             <span>✓</span>
+
             <div>
               <strong>Transparent assistance</strong>
               <p>Review information before moving forward.</p>
@@ -305,6 +316,7 @@ function TrustSection() {
 
           <div>
             <span>✓</span>
+
             <div>
               <strong>Structured workflows</strong>
               <p>Complex forms remain clear and organized.</p>
@@ -313,6 +325,7 @@ function TrustSection() {
 
           <div>
             <span>✓</span>
+
             <div>
               <strong>Designed for real people</strong>
               <p>Less friction without removing user control.</p>
@@ -340,9 +353,9 @@ function CTASection() {
           Start with your story. We'll help with the rest.
         </p>
 
-        <button className="primary-action">
+        <Link to="/claim/ai" className="primary-action">
           Start a claim <span>→</span>
-        </button>
+        </Link>
       </div>
     </section>
   );

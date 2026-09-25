@@ -1,0 +1,321 @@
+.ai-claim-page {
+  min-height: 100vh;
+  background: #f6f3ec;
+  color: #1c1c19;
+  padding: 70px 24px;
+  box-sizing: border-box;
+}
+
+.ai-claim-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ai-claim-header {
+  margin-bottom: 32px;
+}
+
+.ai-claim-eyebrow {
+  color: #e85d3f;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.ai-claim-header h1 {
+  margin: 0;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.ai-claim-header p {
+  max-width: 650px;
+  margin: 16px 0 0;
+  color: #6f706b;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.ai-claim-card {
+  background: #ffffff;
+  border: 1px solid #ddd9d0;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 15px 45px rgba(28, 28, 25, 0.07);
+}
+
+.ai-claim-card-header {
+  margin-bottom: 24px;
+}
+
+.ai-claim-card-header h2 {
+  margin: 0;
+  font-size: 25px;
+}
+
+.ai-claim-card-header p {
+  margin: 8px 0 0;
+  color: #6f706b;
+  line-height: 1.5;
+}
+
+.ai-story-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ai-story-input {
+  width: 100%;
+  min-height: 190px;
+  padding: 18px;
+  box-sizing: border-box;
+
+  resize: vertical;
+
+  border: 1px solid #ccc8bd;
+  border-radius: 16px;
+
+  background: #ffffff;
+  color: #1c1c19;
+
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+
+  outline: none;
+}
+
+.ai-story-input:focus {
+  border-color: #e85d3f;
+  box-shadow: 0 0 0 3px rgba(232, 93, 63, 0.12);
+}
+
+.ai-story-input::placeholder {
+  color: #99968d;
+}
+
+.ai-story-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.ai-story-hint,
+.ai-story-counter {
+  color: #77746c;
+  font-size: 13px;
+}
+
+.ai-claim-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.ai-claim-button {
+  min-height: 48px;
+  padding: 0 22px;
+
+  border-radius: 12px;
+  border: none;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.ai-claim-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ai-claim-button-primary {
+  background: #e85d3f;
+  color: #ffffff;
+}
+
+.ai-claim-button-primary:hover:not(:disabled) {
+  background: #cf4d32;
+}
+
+.ai-claim-button-secondary {
+  background: #ffffff;
+  border: 1px solid #ddd9d0;
+  color: #1c1c19;
+}
+
+/* Processing */
+
+.ai-processing {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.ai-processing-spinner {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 24px;
+
+  border: 4px solid #e8e3da;
+  border-top-color: #e85d3f;
+  border-radius: 50%;
+
+  animation: ai-spin 0.9s linear infinite;
+}
+
+@keyframes ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ai-processing h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.ai-processing p {
+  color: #6f706b;
+  line-height: 1.6;
+}
+
+.ai-processing-steps {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.ai-processing-step {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eeebe3;
+  color: #77746c;
+  font-size: 13px;
+}
+
+.ai-processing-step-active {
+  background: #f1d7b8;
+  color: #1c1c19;
+}
+
+/* Review */
+
+.ai-review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.ai-review-title h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.ai-review-title p {
+  margin: 8px 0 0;
+  color: #6f706b;
+}
+
+.ai-review-badge {
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #b7c9b0;
+  color: #1c2420;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ai-original-story {
+  margin-top: 28px;
+  padding: 18px;
+
+  background: #f6f3ec;
+  border: 1px solid #ddd9d0;
+  border-radius: 14px;
+}
+
+.ai-original-story-label {
+  margin-bottom: 8px;
+  color: #77746c;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ai-original-story p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.ai-extraction-section {
+  margin-top: 28px;
+}
+
+.ai-extraction-section h3 {
+  margin-bottom: 10px;
+}
+
+.ai-review-note {
+  color: #6f706b;
+  line-height: 1.6;
+}
+
+.ai-review-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e4e0d8;
+}
+
+@media (max-width: 700px) {
+  .ai-claim-page {
+    padding: 40px 16px;
+  }
+
+  .ai-claim-card {
+    padding: 22px;
+    border-radius: 18px;
+  }
+
+  .ai-claim-header h1 {
+    font-size: 38px;
+  }
+
+  .ai-story-footer {
+    flex-direction: column;
+  }
+
+  .ai-claim-actions {
+    justify-content: stretch;
+  }
+
+  .ai-claim-actions .ai-claim-button {
+    width: 100%;
+  }
+
+  .ai-review-header {
+    flex-direction: column;
+  }
+
+  .ai-review-actions {
+    flex-direction: column;
+  }
+
+  .ai-review-actions .ai-claim-button {
+    width: 100%;
+  }
+}

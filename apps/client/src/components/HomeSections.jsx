@@ -1,6 +1,21 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function HeroSection() {
+  const [description, setDescription] = useState("");
+
+  const handleStartClaim = () => {
+    const trimmedDescription = description.trim();
+
+    if (!trimmedDescription) {
+      return;
+    }
+
+    sessionStorage.setItem("forma_claim_description", trimmedDescription);
+
+    window.location.href = "/claim/ai";
+  };
+
   return (
     <section className="home-hero">
       <div className="hero-content">
@@ -24,17 +39,25 @@ function HeroSection() {
             <span className="story-label">AI assisted</span>
           </div>
 
-          <div className="story-input">
-            I hit a deer on I-95 yesterday in my Honda,
-            and the windshield shattered.
-          </div>
+          <textarea
+            className="story-input"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            placeholder="I hit a deer on I-95 yesterday in my Honda, and the windshield shattered."
+            maxLength={2000}
+          />
 
           <div className="story-card-bottom">
             <span>Describe your situation naturally.</span>
 
-            <Link to="/claim/ai" className="primary-action">
+            <button
+              type="button"
+              className="primary-action"
+              onClick={handleStartClaim}
+              disabled={!description.trim()}
+            >
               Start a claim <span>→</span>
-            </Link>
+            </button>
           </div>
         </div>
 

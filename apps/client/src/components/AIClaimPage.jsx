@@ -1,215 +1,158 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./AIClaimPage.css";
 
 const FORM_ID = "auto_insurance_claim_v1";
 
 function AIClaimPage() {
+  const [stage, setStage] = useState("processing");
   const [description, setDescription] = useState("");
-  const [stage, setStage] = useState("input");
+  const [extractedData, setExtractedData] = useState(null);
+  const [missingFields, setMissingFields] = useState([]);
+  const [error, setError] = useState("");
 
-  const handleStartClaim = async () => {
-    if (!description.trim()) {
+  useEffect(() => {
+    const storedDescription = sessionStorage.getItem(
+      "forma_claim_description"
+    );
+
+    if (!storedDescription?.trim()) {
+      setError("No claim description was provided.");
+      setStage("error");
       return;
     }
 
-    setStage("processing");
+    setDescription(storedDescription);
 
-    try {
-      const response = await fetch(`/api/extract/${FORM_ID}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: description.trim(),
-        }),
-      });
+    const extractClaim = async () => {
+      try {
+        setStage("processing");
 
-      const data = await response.json();
+        const response = await fetch(`/api/extract/${FORM_ID}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: storedDescription.trim(),
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(
-          data?.message || "Unable to process your claim."
+        const responseText = await response.text();
+
+let data = {};
+
+try {
+  data = responseText ? JSON.parse(responseText) : {};
+} catch {
+  console.error("Invalid JSON response:", responseText);
+}
+
+if (!response.ok) {
+  console.error("Extraction API error:", {
+    status: response.status,
+    data,
+    responseText,
+  });
+
+  throw new Error(
+    data?.message ||
+      data?.error ||
+      `Extraction failed with status ${response.status}`
+  );
+}
+
+        console.log("AI extraction result:", data);
+
+        setExtractedData(data.extracted || {});
+        setMissingFields(data.missing || []);
+        setStage("review");
+      } catch (err) {
+        console.error("AI extraction error:", err);
+
+        setError(
+          err.message || "Something went wrong while processing your claim."
         );
+
+        setStage("error");
       }
+    };
 
-      console.log("AI extraction result:", data);
+    extractClaim();
+  }, []);
 
-      setStage("review");
-    } catch (error) {
-      console.error(error);
-      setStage("input");
-      alert(error.message || "Something went wrong.");
-    }
-  };
+  if (stage === "processing") {
+    return (
+      <div className="ai-claim-page">
+        <div className="ai-claim-card">
+          <p className="eyebrow">FORMA AI</p>
+
+          <h1>Understanding your claim...</h1>
+
+          <p>
+            We're reading your description and identifying the
+            information relevant to your claim.
+          </p>
+
+          <div className="ai-loader" />
+        </div>
+      </div>
+    );
+  }
+
+  if (stage === "error") {
+    return (
+      <div className="ai-claim-page">
+        <div className="ai-claim-card">
+          <p className="eyebrow">FORMA AI</p>
+
+          <h1>Something went wrong</h1>
+
+          <p>{error}</p>
+
+          <Link to="/" className="primary-action">
+            Back to home <span>→</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="ai-claim-page">
-      <div className="ai-claim-container">
+      <div className="ai-claim-card">
+        <p className="eyebrow">AI EXTRACTION COMPLETE</p>
 
-        {/* Header */}
-        <div className="ai-claim-header">
-          <div className="ai-claim-eyebrow">
-            Forma AI
+        <h1>We understood your claim.</h1>
+
+        <p className="ai-description">
+          "{description}"
+        </p>
+
+        <div className="extraction-result">
+          <h3>Extracted information</h3>
+
+          <pre>
+            {JSON.stringify(extractedData, null, 2)}
+          </pre>
+        </div>
+
+        {missingFields.length > 0 && (
+          <div className="missing-fields">
+            <h3>Information still needed</h3>
+
+            <ul>
+              {missingFields.map((field) => (
+                <li key={field}>{field}</li>
+              ))}
+            </ul>
           </div>
+        )}
 
-          <h1>
-            Tell us what happened.
-          </h1>
-
-          <p>
-            Describe your incident naturally. Forma AI will
-            understand the details and help prepare your claim.
-          </p>
-        </div>
-
-        {/* Main Card */}
-        <div className="ai-claim-card">
-
-          {stage === "input" && (
-            <>
-              <div className="ai-claim-card-header">
-                <h2>
-                  Start your claim
-                </h2>
-
-                <p>
-                  You don't need to know exactly what information
-                  we need. Just tell us what happened.
-                </p>
-              </div>
-
-              <label
-                className="ai-story-label"
-                htmlFor="claim-description"
-              >
-                What happened?
-              </label>
-
-              <textarea
-                id="claim-description"
-                className="ai-story-input"
-                value={description}
-                onChange={(event) =>
-                  setDescription(event.target.value)
-                }
-                placeholder="For example: I hit a deer on I-95 yesterday in my Honda, and the windshield shattered."
-              />
-
-              <div className="ai-story-footer">
-                <span className="ai-story-hint">
-                  AI assisted • You review everything before submitting
-                </span>
-
-                <span className="ai-story-counter">
-                  {description.length}/2000
-                </span>
-              </div>
-
-              <div className="ai-claim-actions">
-                <button
-                  type="button"
-                  className="ai-claim-button ai-claim-button-primary"
-                  onClick={handleStartClaim}
-                  disabled={!description.trim()}
-                >
-                  Continue with AI →
-                </button>
-              </div>
-            </>
-          )}
-
-          {stage === "processing" && (
-            <div className="ai-processing">
-              <div className="ai-processing-spinner" />
-
-              <h2>
-                Understanding your claim
-              </h2>
-
-              <p>
-                Forma AI is identifying the details from your
-                description.
-              </p>
-
-              <div className="ai-processing-steps">
-                <span className="ai-processing-step ai-processing-step-active">
-                  Reading your story
-                </span>
-
-                <span className="ai-processing-step">
-                  Extracting details
-                </span>
-
-                <span className="ai-processing-step">
-                  Preparing claim
-                </span>
-              </div>
-            </div>
-          )}
-
-          {stage === "review" && (
-            <>
-              <div className="ai-review-header">
-                <div className="ai-review-title">
-                  <h2>
-                    We understood your story
-                  </h2>
-
-                  <p>
-                    Review the information before continuing.
-                  </p>
-                </div>
-
-                <span className="ai-review-badge">
-                  AI assisted
-                </span>
-              </div>
-
-              <div className="ai-original-story">
-                <div className="ai-original-story-label">
-                  Your description
-                </div>
-
-                <p>
-                  {description}
-                </p>
-              </div>
-
-              <div className="ai-extraction-section">
-                <h3>
-                  Next step
-                </h3>
-
-                <p className="ai-review-note">
-                  Your claim details have been processed.
-                  The next step will connect this result to
-                  your existing claim form so you can review
-                  and complete any missing information.
-                </p>
-              </div>
-
-              <div className="ai-review-actions">
-                <button
-                  type="button"
-                  className="ai-claim-button ai-claim-button-secondary"
-                  onClick={() => setStage("input")}
-                >
-                  ← Edit description
-                </button>
-
-                <button
-                  type="button"
-                  className="ai-claim-button ai-claim-button-primary"
-                  disabled
-                >
-                  Continue to claim →
-                </button>
-              </div>
-            </>
-          )}
-
-        </div>
+        <p className="step-note">
+          AI extraction is working. The next step will connect this
+          data to the existing dynamic claim form.
+        </p>
       </div>
     </div>
   );

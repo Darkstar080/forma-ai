@@ -18,7 +18,7 @@ router.post("/:formId", async (req, res) => {
     res.json({ extracted, missing });
   } catch (err) {
     console.error("Extraction error:", err);
-    res.status(500).json({ error: "Extraction failed" });
+    res.status(500).json({ error: err?.message || "Extraction failed" });
   }
 });
 

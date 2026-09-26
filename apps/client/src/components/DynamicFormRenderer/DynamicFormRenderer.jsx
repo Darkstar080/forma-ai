@@ -3,9 +3,22 @@ import { evaluateConditions } from "@forma-ai/shared";
 import { useFormSchema } from "../../hooks/useFormSchema";
 import "./DynamicFormRenderer.css";
 
-function DynamicFormRenderer({ formId, description }) {
+function DynamicFormRenderer({
+  formId,
+  description,
+  initialValues = {},
+}) {
   const { schema, loading, error } = useFormSchema(formId);
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: initialValues,
+  });
+
   const values = watch();
 
   if (loading) return <p>Loading form...</p>;
@@ -16,46 +29,118 @@ function DynamicFormRenderer({ formId, description }) {
     evaluateConditions(field.showIf, values)
   );
 
-  const onSubmit = (data) => console.log("Form submitted:", data); // TODO Week 3/4: POST to save
+  const onSubmit = (data) => {
+    console.log("Form submitted:", data);
+  };
 
   const renderField = (field) => {
-    const rules = { required: field.validation?.required ? "This field is required" : false };
+    const rules = {
+      required: field.validation?.required
+        ? "This field is required"
+        : false,
+    };
+
     if (field.validation?.regex) {
-      rules.pattern = { value: new RegExp(field.validation.regex), message: "Invalid format" };
+      rules.pattern = {
+        value: new RegExp(field.validation.regex),
+        message: "Invalid format",
+      };
     }
-    if (field.validation?.min !== undefined) rules.min = { value: field.validation.min, message: `Minimum is ${field.validation.min}` };
-    if (field.validation?.max !== undefined) rules.max = { value: field.validation.max, message: `Maximum is ${field.validation.max}` };
+
+    if (field.validation?.min !== undefined) {
+      rules.min = {
+        value: field.validation.min,
+        message: `Minimum is ${field.validation.min}`,
+      };
+    }
+
+    if (field.validation?.max !== undefined) {
+      rules.max = {
+        value: field.validation.max,
+        message: `Maximum is ${field.validation.max}`,
+      };
+    }
 
     switch (field.type) {
       case "select":
         return (
-          <select {...register(field.fieldId, rules)} defaultValue="">
-            <option value="" disabled>Select an option</option>
+          <select {...register(field.fieldId, rules)}>
+            <option value="" disabled>
+              Select an option
+            </option>
+
             {field.options?.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
         );
+
       case "textarea":
-        return <textarea {...register(field.fieldId, rules)} rows={5} />;
+        return (
+          <textarea
+            {...register(field.fieldId, rules)}
+            rows={5}
+          />
+        );
+
       case "number":
-        return <input type="number" {...register(field.fieldId, { ...rules, valueAsNumber: true })} />;
+        return (
+          <input
+            type="number"
+            {...register(field.fieldId, {
+              ...rules,
+              valueAsNumber: true,
+            })}
+          />
+        );
+
       case "date":
-        return <input type="date" {...register(field.fieldId, rules)} />;
+        return (
+          <input
+            type="date"
+            {...register(field.fieldId, rules)}
+          />
+        );
+
       case "checkbox":
-        return <input type="checkbox" {...register(field.fieldId, rules)} />;
+        return (
+          <input
+            type="checkbox"
+            {...register(field.fieldId, rules)}
+          />
+        );
+
       case "radio":
         return (
           <div>
             {field.options?.map((opt) => (
-              <label key={opt.value} style={{ display: "block", fontWeight: 400 }}>
-                <input type="radio" value={opt.value} {...register(field.fieldId, rules)} /> {opt.label}
+              <label
+                key={opt.value}
+                style={{
+                  display: "block",
+                  fontWeight: 400,
+                }}
+              >
+                <input
+                  type="radio"
+                  value={opt.value}
+                  {...register(field.fieldId, rules)}
+                />{" "}
+                {opt.label}
               </label>
             ))}
           </div>
         );
+
       default:
-        return <input type="text" {...register(field.fieldId, rules)} />;
+        return (
+          <input
+            type="text"
+            {...register(field.fieldId, rules)}
+          />
+        );
     }
   };
 
@@ -63,7 +148,9 @@ function DynamicFormRenderer({ formId, description }) {
     <div className="dynamic-form">
       <div className="form-header">
         <div className="form-badge">INSURANCE CLAIM</div>
+
         <h2>{schema.title}</h2>
+
         {description && <p>{description}</p>}
       </div>
 
@@ -74,20 +161,41 @@ function DynamicFormRenderer({ formId, description }) {
           <div className="form-field" key={field.fieldId}>
             <label htmlFor={field.fieldId}>
               {field.label}
-              {field.validation?.required && <span className="required"> *</span>}
+
+              {field.validation?.required && (
+                <span className="required"> *</span>
+              )}
             </label>
+
             {renderField(field)}
+
             {errors[field.fieldId] && (
-              <span className="field-error">{errors[field.fieldId].message}</span>
+              <span className="field-error">
+                {errors[field.fieldId].message}
+              </span>
             )}
           </div>
         ))}
 
         <div className="form-footer">
-          <p className="required-note"><span>*</span> Required fields</p>
+          <p className="required-note">
+            <span>*</span> Required fields
+          </p>
+
           <div className="form-actions">
-            <button type="button" className="draft-button">Save as Draft</button>
-            <button type="submit" className="submit-button">Submit Claim</button>
+            <button
+              type="button"
+              className="draft-button"
+            >
+              Save as Draft
+            </button>
+
+            <button
+              type="submit"
+              className="submit-button"
+            >
+              Submit Claim
+            </button>
           </div>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MagicClaimForm from "./MagicClaimForm";
+import ClaimPreview from "./ClaimPreview";
 import "./AIClaimPage.css";
 
 const FORM_ID = "auto_insurance_claim_v1";
@@ -118,29 +119,51 @@ function AIClaimPage() {
   ========================= */
 
   if (stage === "preview") {
-    return (
-      <div className="ai-claim-page">
-        <div className="ai-processing">
-          <p className="ai-eyebrow">FORMA AI</p>
+  return (
+    <div className="ai-claim-page">
+      <header className="ai-topbar">
+        <Link to="/" className="ai-logo">
+          <span className="ai-logo-mark">F</span>
+          <span>Forma</span>
+        </Link>
 
-          <h1>Claim information captured</h1>
+        <div className="ai-progress">
+          <span className="progress-step completed">
+            <span>1</span>
+            Describe
+          </span>
 
-          <p>
-            Your completed claim information is ready for the
-            review screen.
-          </p>
+          <div className="progress-line active" />
 
-          <button
-            type="button"
-            className="ai-back-button"
-            onClick={() => setStage("form")}
-          >
-            ← Edit claim
-          </button>
+          <span className="progress-step completed">
+            <span>2</span>
+            Complete
+          </span>
+
+          <div className="progress-line active" />
+
+          <span className="progress-step current">
+            <span>3</span>
+            Review
+          </span>
         </div>
-      </div>
-    );
-  }
+
+        <Link to="/" className="ai-exit">
+          Exit
+        </Link>
+      </header>
+
+      <ClaimPreview
+        claimData={claimData}
+        description={description}
+        onEdit={() => setStage("form")}
+        onGenerate={() => {
+          console.log("Generate PDF:", claimData);
+        }}
+      />
+    </div>
+  );
+}
 
   /* =========================
      CLAIM FORM

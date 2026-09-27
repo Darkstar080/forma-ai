@@ -1,0 +1,161 @@
+.claim-preview {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 32px 80px;
+}
+
+.claim-preview-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.preview-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #667085;
+}
+
+.claim-preview-header h1 {
+  margin: 8px 0;
+  font-size: 40px;
+  line-height: 1.1;
+  color: #17211b;
+}
+
+.claim-preview-header p {
+  margin: 0;
+  color: #667085;
+  font-size: 16px;
+}
+
+.preview-status {
+  padding: 9px 14px;
+  border: 1px solid #d8e4dc;
+  border-radius: 999px;
+  background: #f4f8f5;
+  color: #35704b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.preview-description {
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fafbfa;
+}
+
+.preview-description span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #7a847d;
+}
+
+.preview-description p {
+  margin: 10px 0 0;
+  color: #344054;
+  line-height: 1.7;
+}
+
+.preview-section {
+  margin-bottom: 18px;
+  padding: 26px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.preview-section-heading {
+  margin-bottom: 20px;
+}
+
+.preview-section-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #17211b;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 28px;
+}
+
+.preview-field {
+  min-width: 0;
+}
+
+.preview-field span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #7a847d;
+}
+
+.preview-field strong {
+  display: block;
+  color: #26332b;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.preview-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.preview-edit-button,
+.preview-generate-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.preview-edit-button {
+  background: #f2f4f3;
+  color: #344054;
+}
+
+.preview-generate-button {
+  background: #17211b;
+  color: #fff;
+}
+
+@media (max-width: 700px) {
+  .claim-preview {
+    padding: 32px 18px 60px;
+  }
+
+  .claim-preview-header {
+    flex-direction: column;
+  }
+
+  .claim-preview-header h1 {
+    font-size: 32px;
+  }
+
+  .preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}

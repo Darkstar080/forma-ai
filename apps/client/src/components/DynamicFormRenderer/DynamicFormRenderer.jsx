@@ -7,6 +7,9 @@ function DynamicFormRenderer({
   formId,
   description,
   initialValues = {},
+  onSubmit,
+  submitLabel = "Submit Claim",
+  showDraftButton = true,
 }) {
   const { schema, loading, error } = useFormSchema(formId);
 
@@ -29,7 +32,12 @@ function DynamicFormRenderer({
     evaluateConditions(field.showIf, values)
   );
 
-  const onSubmit = (data) => {
+  const handleFormSubmit = (data) => {
+    if (onSubmit) {
+      onSubmit(data);
+      return;
+    }
+
     console.log("Form submitted:", data);
   };
 
@@ -156,7 +164,7 @@ function DynamicFormRenderer({
 
       <div className="form-divider" />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         {visibleFields.map((field) => (
           <div className="form-field" key={field.fieldId}>
             <label htmlFor={field.fieldId}>
@@ -183,18 +191,20 @@ function DynamicFormRenderer({
           </p>
 
           <div className="form-actions">
-            <button
-              type="button"
-              className="draft-button"
-            >
-              Save as Draft
-            </button>
+            {showDraftButton && (
+              <button
+                type="button"
+                className="draft-button"
+              >
+                Save as Draft
+              </button>
+            )}
 
             <button
               type="submit"
               className="submit-button"
             >
-              Submit Claim
+              {submitLabel}
             </button>
           </div>
         </div>

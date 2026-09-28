@@ -10,5 +10,8 @@
     "dev:client": "npm run dev --workspace=@forma-ai/client",
     "dev:server": "npm run dev --workspace=@forma-ai/server",
     "lint": "npm run lint --workspaces --if-present"
+  },
+  "dependencies": {
+    "jspdf": "^4.2.1"
   }
 }

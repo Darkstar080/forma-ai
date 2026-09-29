@@ -10,7 +10,12 @@ function cleanVisibleData(schema, data) {
   const visibleFieldIds = schema.fields
     .filter((f) => evaluateConditions(f.showIf, data))
     .map((f) => f.fieldId);
-  return Object.fromEntries(Object.entries(data).filter(([key]) => visibleFieldIds.includes(key)));
+
+  return Object.fromEntries(
+    Object.entries(data).filter(([key]) =>
+      visibleFieldIds.includes(key)
+    )
+  );
 }
 
 function DynamicFormRenderer({
@@ -23,16 +28,18 @@ function DynamicFormRenderer({
   showDraftButton = true,
 }) {
   const { schema, loading, error } = useFormSchema(formId);
+
   const {
     register,
     handleSubmit,
     watch,
-setValue,
+    setValue,
     reset,
     formState: { errors },
   } = useForm({
     defaultValues: initialValues,
   });
+
   const values = watch();
 
   const [submissionId, setSubmissionId] = useState(null);
@@ -48,10 +55,12 @@ setValue,
   const [showResumeBanner, setShowResumeBanner] = useState(false);
   const [savedDraftId, setSavedDraftId] = useState(null);
 
-  // Explicit resume (e.g. clicked from My Claims) takes priority over the generic banner
+  // Explicit resume takes priority over generic banner
   useEffect(() => {
     if (resumeId) return;
+
     const stored = localStorage.getItem(`forma-draft-${formId}`);
+
     if (stored) {
       setSavedDraftId(stored);
       setShowResumeBanner(true);
@@ -60,46 +69,68 @@ setValue,
 
   useEffect(() => {
     if (!resumeId) return;
+
     (async () => {
       try {
         const res = await authFetch(`/api/submissions/${resumeId}`);
+
         if (!res.ok) return;
+
         const submission = await res.json();
+
         reset(submission.data);
         setSubmissionId(submission._id);
       } catch {
         // silent — user can still fill the form manually
       }
     })();
-  }, [resumeId]);
+  }, [resumeId, reset]);
 
   if (loading) return <p>Loading form...</p>;
   if (error) return <p>Failed to load form: {error}</p>;
   if (!schema) return null;
 
   const visibleFields = schema.fields.filter((field) =>
-    evaluateConditions(field.showIf, values),
+    evaluateConditions(field.showIf, values)
   );
 
-const handleMagicExtract = async () => {
+  const handleMagicExtract = async () => {
     if (!magicText.trim()) return;
+
     setExtracting(true);
     setExtractError(null);
+
     try {
       const res = await fetch(`/api/extract/${formId}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: magicText }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: magicText,
+        }),
       });
+
       if (res.status === 429) {
-        throw new Error("Too many requests right now. Wait a minute and try again.");
+        throw new Error(
+          "Too many requests right now. Wait a minute and try again."
+        );
       }
-      if (!res.ok) throw new Error("Could not read your description. Please fill in the form manually.");
+
+      if (!res.ok) {
+        throw new Error(
+          "Could not read your description. Please fill in the form manually."
+        );
+      }
 
       const { extracted, missing } = await res.json();
+
       Object.entries(extracted).forEach(([fieldId, value]) => {
-        setValue(fieldId, value, { shouldValidate: true });
+        setValue(fieldId, value, {
+          shouldValidate: true,
+        });
       });
+
       setAiFilledFields(Object.keys(extracted));
       setAiMissingFields(missing);
     } catch (err) {
@@ -114,20 +145,41 @@ const handleMagicExtract = async () => {
       setSaveStatus("needsLogin");
       return;
     }
+
     setSaveStatus("saving");
+
     const cleanedData = cleanVisibleData(schema, watch());
+
     try {
       const method = submissionId ? "PUT" : "POST";
-      const url = submissionId ? `/api/submissions/${submissionId}` : "/api/submissions";
+
+      const url = submissionId
+        ? `/api/submissions/${submissionId}`
+        : "/api/submissions";
+
       const res = await authFetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formId, data: cleanedData, status: "draft" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          formId,
+          data: cleanedData,
+          status: "draft",
+        }),
       });
+
       if (!res.ok) throw new Error("Save failed");
+
       const saved = await res.json();
+
       setSubmissionId(saved._id);
-      localStorage.setItem(`forma-draft-${formId}`, saved._id);
+
+      localStorage.setItem(
+        `forma-draft-${formId}`,
+        saved._id
+      );
+
       setSaveStatus("saved");
     } catch {
       setSaveStatus("error");
@@ -136,14 +188,20 @@ const handleMagicExtract = async () => {
 
   const handleResumeDraft = async () => {
     try {
-      const res = await authFetch(`/api/submissions/${savedDraftId}`);
+      const res = await authFetch(
+        `/api/submissions/${savedDraftId}`
+      );
+
       if (!res.ok) throw new Error("Could not load draft");
+
       const draft = await res.json();
+
       if (draft.status === "submitted") {
         localStorage.removeItem(`forma-draft-${formId}`);
         setShowResumeBanner(false);
         return;
       }
+
       reset(draft.data);
       setSubmissionId(draft._id);
       setShowResumeBanner(false);
@@ -153,11 +211,12 @@ const handleMagicExtract = async () => {
     }
   };
 
-  const handleDismissResume = () => setShowResumeBanner(false);
+  const handleDismissResume = () =>
+    setShowResumeBanner(false);
 
   const handleFormSubmit = async (data) => {
-    if (customOnSubmit) {
-      customOnSubmit(data);
+    if (onSubmit) {
+      onSubmit(data);
       return;
     }
 
@@ -165,32 +224,51 @@ const handleMagicExtract = async () => {
       setSubmitStatus("needsLogin");
       return;
     }
+
     setSubmitStatus("submitting");
+
     const cleanedData = cleanVisibleData(schema, data);
 
     try {
       const method = submissionId ? "PUT" : "POST";
-      const url = submissionId ? `/api/submissions/${submissionId}` : "/api/submissions";
+
+      const url = submissionId
+        ? `/api/submissions/${submissionId}`
+        : "/api/submissions";
+
       const res = await authFetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formId, data: cleanedData, status: "submitted" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          formId,
+          data: cleanedData,
+          status: "submitted",
+        }),
       });
+
       if (!res.ok) throw new Error("Submit failed");
+
       const saved = await res.json();
+
       setSubmissionId(saved._id);
+
       localStorage.removeItem(`forma-draft-${formId}`);
+
       setSubmitStatus("submitted");
     } catch {
       setSubmitStatus("error");
     }
   };
-  };
 
   const renderField = (field) => {
     const rules = {
-required: field.validation?.required ? "This field is required" : false,
+      required: field.validation?.required
+        ? "This field is required"
+        : false,
     };
+
     if (field.validation?.regex) {
       rules.pattern = {
         value: new RegExp(field.validation.regex),
@@ -211,10 +289,6 @@ required: field.validation?.required ? "This field is required" : false,
         message: `Maximum is ${field.validation.max}`,
       };
     }
-if (field.validation?.min !== undefined)
-      rules.min = { value: field.validation.min, message: `Minimum is ${field.validation.min}` };
-    if (field.validation?.max !== undefined)
-      rules.max = { value: field.validation.max, message: `Maximum is ${field.validation.max}` };
 
     switch (field.type) {
       case "select":
@@ -312,15 +386,30 @@ if (field.validation?.min !== undefined)
       {showResumeBanner && !submissionId && (
         <div className="resume-banner">
           <p>You have a saved draft for this form.</p>
+
           <div className="resume-banner-actions">
-            <button type="button" onClick={handleResumeDraft}>Continue draft</button>
-            <button type="button" onClick={handleDismissResume}>Start fresh</button>
+            <button
+              type="button"
+              onClick={handleResumeDraft}
+            >
+              Continue draft
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDismissResume}
+            >
+              Start fresh
+            </button>
           </div>
         </div>
       )}
 
       <div className="magic-input-section">
-        <label htmlFor="magic-input">Describe what happened</label>
+        <label htmlFor="magic-input">
+          Describe what happened
+        </label>
+
         <textarea
           id="magic-input"
           value={magicText}
@@ -328,20 +417,34 @@ if (field.validation?.min !== undefined)
           placeholder="e.g. I hit a deer on I-95 yesterday going about 50 mph..."
           disabled={extracting}
         />
+
         <button
           type="button"
           className="magic-input-button"
           onClick={handleMagicExtract}
           disabled={extracting || !magicText.trim()}
         >
-          {extracting ? "Reading your description..." : "Fill form automatically"}
+          {extracting
+            ? "Reading your description..."
+            : "Fill form automatically"}
         </button>
-        {extractError && <span className="field-error">{extractError}</span>}
+
+        {extractError && (
+          <span className="field-error">
+            {extractError}
+          </span>
+        )}
       </div>
 
       {submissionId && (
-        <p style={{ fontSize: "13px", color: "#64748b" }}>
-          Draft saved. Your reference: <strong>{submissionId}</strong>
+        <p
+          style={{
+            fontSize: "13px",
+            color: "#64748b",
+          }}
+        >
+          Draft saved. Your reference:{" "}
+          <strong>{submissionId}</strong>
         </p>
       )}
 
@@ -349,7 +452,10 @@ if (field.validation?.min !== undefined)
 
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         {visibleFields.map((field) => (
-          <div className="form-field" key={field.fieldId}>
+          <div
+            className="form-field"
+            key={field.fieldId}
+          >
             <label htmlFor={field.fieldId}>
               {field.label}
 
@@ -365,13 +471,19 @@ if (field.validation?.min !== undefined)
                 {errors[field.fieldId].message}
               </span>
             )}
-            {aiMissingFields.includes(field.fieldId) && !values[field.fieldId] && (
-              <span className="ai-flag">
-                AI could not find this in your description. Please fill it in.
-              </span>
-            )}
+
+            {aiMissingFields.includes(field.fieldId) &&
+              !values[field.fieldId] && (
+                <span className="ai-flag">
+                  AI could not find this in your description.
+                  Please fill it in.
+                </span>
+              )}
+
             {aiFilledFields.includes(field.fieldId) && (
-              <span className="ai-verify-tag">Filled by AI — please verify</span>
+              <span className="ai-verify-tag">
+                Filled by AI — please verify
+              </span>
             )}
           </div>
         ))}
@@ -380,14 +492,17 @@ if (field.validation?.min !== undefined)
           <p className="required-note">
             <span>*</span> Required fields
           </p>
-<div className="form-actions">
+
+          <div className="form-actions">
             {showDraftButton && (
               <button
                 type="button"
                 className="draft-button"
                 onClick={handleSaveDraft}
               >
-                {saveStatus === "saving" ? "Saving..." : "Save as Draft"}
+                {saveStatus === "saving"
+                  ? "Saving..."
+                  : "Save as Draft"}
               </button>
             )}
 
@@ -396,24 +511,36 @@ if (field.validation?.min !== undefined)
               className="submit-button"
               disabled={submitStatus === "submitting"}
             >
-              {submitStatus === "submitting" ? "Submitting..." : submitLabel}
-            </button>
+              {submitStatus === "submitting"
+                ? "Submitting..."
+                : submitLabel}
             </button>
           </div>
         </div>
 
-        {(saveStatus === "needsLogin" || submitStatus === "needsLogin") && (
+        {(saveStatus === "needsLogin" ||
+          submitStatus === "needsLogin") && (
           <p className="field-error">
-            Please <Link to="/login">log in</Link> to save or submit your claim.
+            Please <Link to="/login">log in</Link> to save or
+            submit your claim.
           </p>
         )}
+
         {submitStatus === "submitted" && (
-          <p style={{ color: "#16a34a", fontWeight: 600 }}>
+          <p
+            style={{
+              color: "#16a34a",
+              fontWeight: 600,
+            }}
+          >
             Claim submitted. Reference: {submissionId}
           </p>
         )}
+
         {submitStatus === "error" && (
-          <p className="field-error">Something went wrong. Please try again.</p>
+          <p className="field-error">
+            Something went wrong. Please try again.
+          </p>
         )}
       </form>
     </div>

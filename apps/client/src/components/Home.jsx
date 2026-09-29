@@ -586,6 +586,7 @@ function Home({ children }) {
             <a href="#features">Features</a>
             <a href="#claims">Claims</a>
             <a href="#support">Support</a>
+            {authEmail && <Link to="/my-claims">My Claims</Link>}
             {authEmail ? (
               <button
                 type="button"
@@ -659,6 +660,11 @@ function Home({ children }) {
             >
               {darkMode ? "☀  Light mode" : "☾  Dark mode"}
             </button>
+            {authEmail && (
+              <Link to="/my-claims" onClick={closeMobileMenu}>
+                My Claims
+              </Link>
+            )}
             {authEmail ? (
               <button
                 type="button"

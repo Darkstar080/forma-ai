@@ -231,3 +231,18 @@
   .resume-banner-actions { flex-direction: column; }
   .resume-banner-actions button { width: 100%; }
 }
+
+.pdf-download-inline {
+  margin-left: 8px;
+  padding: 4px 12px;
+  border: 1px solid #16a34a;
+  border-radius: 999px;
+  background: transparent;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 650;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.pdf-download-inline:hover { background: rgba(22, 163, 74, 0.08); }

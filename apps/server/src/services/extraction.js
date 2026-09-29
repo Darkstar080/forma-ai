@@ -2,28 +2,46 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 function buildResponseSchema(fields) {
   const properties = {};
+
   for (const field of fields) {
     const prop = {
       type: field.type === "number" ? "number" : "string",
       description: field.label,
       nullable: true,
     };
-    if ((field.type === "select" || field.type === "radio") && field.options?.length) {
+
+    if (
+      (field.type === "select" || field.type === "radio") &&
+      field.options?.length
+    ) {
       prop.enum = field.options.map((o) => o.value);
     }
+
     properties[field.fieldId] = prop;
   }
-  return { type: "object", properties };
+
+  return {
+    type: "object",
+    properties,
+  };
 }
 
 export async function extractFromText(schema, text) {
   const responseSchema = buildResponseSchema(schema.fields);
-  const model = new ChatGoogleGenerativeAI({ model: "gemini-3.6-flash", temperature: 0 });
+
+  const model = new ChatGoogleGenerativeAI({
+    model: "gemini-3.5-flash-lite",
+    temperature: 0,
+  });
+
   const structuredModel = model.withStructuredOutput(responseSchema);
 
   const fieldDescriptions = schema.fields
     .map((f) => {
-      const opts = f.options?.length ? ` [allowed values: ${f.options.map((o) => o.value).join(", ")}]` : "";
+      const opts = f.options?.length
+        ? ` [allowed values: ${f.options.map((o) => o.value).join(", ")}]`
+        : "";
+
       return `- ${f.fieldId} (${f.type}): ${f.label}${opts}`;
     })
     .join("\n");
@@ -44,9 +62,15 @@ ${text}
 
   const extracted = {};
   const missing = [];
+
   for (const field of schema.fields) {
     const value = result[field.fieldId];
-    if (value === null || value === undefined || value === "") {
+
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
       missing.push(field.fieldId);
     } else {
       extracted[field.fieldId] = value;
@@ -55,7 +79,6 @@ ${text}
 
   return { extracted, missing };
 }
-
 
 export async function extractMagicClaimFromText(text) {
   const responseSchema = {
@@ -102,7 +125,7 @@ export async function extractMagicClaimFromText(text) {
   };
 
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-3.6-flash",
+    model: "gemini-3.5-flash-lite",
     temperature: 0,
   });
 
@@ -162,7 +185,11 @@ ${text}
   const missing = [];
 
   for (const [field, value] of Object.entries(result)) {
-    if (value !== null && value !== undefined && value !== "") {
+    if (
+      value !== null &&
+      value !== undefined &&
+      value !== ""
+    ) {
       extracted[field] = value;
     } else {
       missing.push(field);

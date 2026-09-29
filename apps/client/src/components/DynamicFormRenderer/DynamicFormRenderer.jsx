@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { evaluateConditions } from "@forma-ai/shared";
-import { authFetch, isLoggedIn } from "../../lib/api";
 import { useFormSchema } from "../../hooks/useFormSchema";
+import { authFetch, isLoggedIn, downloadSubmissionPdf } from "../../lib/api";
 import "./DynamicFormRenderer.css";
 
 function cleanVisibleData(schema, data) {
   const visibleFieldIds = schema.fields
     .filter((f) => evaluateConditions(f.showIf, data))
     .map((f) => f.fieldId);
-return Object.fromEntries(
-    Object.entries(data).filter(([key]) => visibleFieldIds.includes(key))
+  return Object.fromEntries(
+    Object.entries(data).filter(([key]) => visibleFieldIds.includes(key)),
   );
 }
 
@@ -88,8 +88,14 @@ function DynamicFormRenderer({
   if (!schema) return null;
 
   const visibleFields = schema.fields.filter((field) =>
-    evaluateConditions(field.showIf, values)
+    evaluateConditions(field.showIf, values),
   );
+
+  const handleDownloadPdf = () => {
+    downloadSubmissionPdf(submissionId, `${formId}-claim.pdf`).catch(() => {
+      setSubmitStatus("error");
+    });
+  };
 
   const handleMagicExtract = async () => {
     if (!magicText.trim()) return;
@@ -110,18 +116,18 @@ function DynamicFormRenderer({
 
       if (res.status === 429) {
         throw new Error(
-          "Too many requests right now. Wait a minute and try again."
+          "Too many requests right now. Wait a minute and try again.",
         );
       }
 
       if (!res.ok) {
         throw new Error(
-          "Could not read your description. Please fill in the form manually."
+          "Could not read your description. Please fill in the form manually.",
         );
       }
-if (!res.ok) {
+      if (!res.ok) {
         throw new Error(
-          "Could not read your description. Please fill in the form manually."
+          "Could not read your description. Please fill in the form manually.",
         );
       }
 
@@ -154,7 +160,7 @@ if (!res.ok) {
 
     try {
       const method = submissionId ? "PUT" : "POST";
-const url = submissionId
+      const url = submissionId
         ? `/api/submissions/${submissionId}`
         : "/api/submissions";
       const res = await authFetch(url, {
@@ -175,10 +181,7 @@ const url = submissionId
 
       setSubmissionId(saved._id);
 
-      localStorage.setItem(
-        `forma-draft-${formId}`,
-        saved._id
-      );
+      localStorage.setItem(`forma-draft-${formId}`, saved._id);
 
       setSaveStatus("saved");
     } catch {
@@ -188,9 +191,7 @@ const url = submissionId
 
   const handleResumeDraft = async () => {
     try {
-      const res = await authFetch(
-        `/api/submissions/${savedDraftId}`
-      );
+      const res = await authFetch(`/api/submissions/${savedDraftId}`);
 
       if (!res.ok) throw new Error("Could not load draft");
 
@@ -211,8 +212,7 @@ const url = submissionId
     }
   };
 
-  const handleDismissResume = () =>
-    setShowResumeBanner(false);
+  const handleDismissResume = () => setShowResumeBanner(false);
 
   const handleFormSubmit = async (data) => {
     if (onSubmit) {
@@ -231,7 +231,7 @@ const url = submissionId
 
     try {
       const method = submissionId ? "PUT" : "POST";
-const url = submissionId
+      const url = submissionId
         ? `/api/submissions/${submissionId}`
         : "/api/submissions";
       const res = await authFetch(url, {
@@ -262,7 +262,7 @@ const url = submissionId
 
   const renderField = (field) => {
     const rules = {
-required: field.validation?.required ? "This field is required" : false,
+      required: field.validation?.required ? "This field is required" : false,
     };
 
     if (field.validation?.regex) {
@@ -303,12 +303,7 @@ required: field.validation?.required ? "This field is required" : false,
         );
 
       case "textarea":
-        return (
-          <textarea
-            {...register(field.fieldId, rules)}
-            rows={5}
-          />
-        );
+        return <textarea {...register(field.fieldId, rules)} rows={5} />;
 
       case "number":
         return (
@@ -322,20 +317,10 @@ required: field.validation?.required ? "This field is required" : false,
         );
 
       case "date":
-        return (
-          <input
-            type="date"
-            {...register(field.fieldId, rules)}
-          />
-        );
+        return <input type="date" {...register(field.fieldId, rules)} />;
 
       case "checkbox":
-        return (
-          <input
-            type="checkbox"
-            {...register(field.fieldId, rules)}
-          />
-        );
+        return <input type="checkbox" {...register(field.fieldId, rules)} />;
 
       case "radio":
         return (
@@ -360,12 +345,7 @@ required: field.validation?.required ? "This field is required" : false,
         );
 
       default:
-        return (
-          <input
-            type="text"
-            {...register(field.fieldId, rules)}
-          />
-        );
+        return <input type="text" {...register(field.fieldId, rules)} />;
     }
   };
 
@@ -384,7 +364,7 @@ required: field.validation?.required ? "This field is required" : false,
           <p>You have a saved draft for this form.</p>
 
           <div className="resume-banner-actions">
-<button type="button" onClick={handleResumeDraft}>
+            <button type="button" onClick={handleResumeDraft}>
               Continue draft
             </button>
 
@@ -396,9 +376,7 @@ required: field.validation?.required ? "This field is required" : false,
       )}
 
       <div className="magic-input-section">
-        <label htmlFor="magic-input">
-          Describe what happened
-        </label>
+        <label htmlFor="magic-input">Describe what happened</label>
 
         <textarea
           id="magic-input"
@@ -419,11 +397,7 @@ required: field.validation?.required ? "This field is required" : false,
             : "Fill form automatically"}
         </button>
 
-        {extractError && (
-          <span className="field-error">
-            {extractError}
-          </span>
-        )}
+        {extractError && <span className="field-error">{extractError}</span>}
       </div>
 
       {submissionId && (
@@ -433,8 +407,7 @@ required: field.validation?.required ? "This field is required" : false,
             color: "#64748b",
           }}
         >
-          Draft saved. Your reference:{" "}
-          <strong>{submissionId}</strong>
+          Draft saved. Your reference: <strong>{submissionId}</strong>
         </p>
       )}
 
@@ -442,10 +415,7 @@ required: field.validation?.required ? "This field is required" : false,
 
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         {visibleFields.map((field) => (
-          <div
-            className="form-field"
-            key={field.fieldId}
-          >
+          <div className="form-field" key={field.fieldId}>
             <label htmlFor={field.fieldId}>
               {field.label}
 
@@ -465,8 +435,7 @@ required: field.validation?.required ? "This field is required" : false,
             {aiMissingFields.includes(field.fieldId) &&
               !values[field.fieldId] && (
                 <span className="ai-flag">
-                  AI could not find this in your description.
-                  Please fill it in.
+                  AI could not find this in your description. Please fill it in.
                 </span>
               )}
 
@@ -490,9 +459,7 @@ required: field.validation?.required ? "This field is required" : false,
                 className="draft-button"
                 onClick={handleSaveDraft}
               >
-                {saveStatus === "saving"
-                  ? "Saving..."
-                  : "Save as Draft"}
+                {saveStatus === "saving" ? "Saving..." : "Save as Draft"}
               </button>
             )}
 
@@ -501,36 +468,32 @@ required: field.validation?.required ? "This field is required" : false,
               className="submit-button"
               disabled={submitStatus === "submitting"}
             >
-              {submitStatus === "submitting"
-                ? "Submitting..."
-                : submitLabel}
+              {submitStatus === "submitting" ? "Submitting..." : submitLabel}
             </button>
           </div>
         </div>
 
-        {(saveStatus === "needsLogin" ||
-          submitStatus === "needsLogin") && (
+        {(saveStatus === "needsLogin" || submitStatus === "needsLogin") && (
           <p className="field-error">
-            Please <Link to="/login">log in</Link> to save or
-            submit your claim.
+            Please <Link to="/login">log in</Link> to save or submit your claim.
           </p>
         )}
 
         {submitStatus === "submitted" && (
-          <p
-            style={{
-              color: "#16a34a",
-              fontWeight: 600,
-            }}
-          >
-            Claim submitted. Reference: {submissionId}
+          <p style={{ color: "#16a34a", fontWeight: 600 }}>
+            Claim submitted. Reference: {submissionId}{" "}
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              className="pdf-download-inline"
+            >
+              Download PDF
+            </button>
           </p>
         )}
 
         {submitStatus === "error" && (
-          <p className="field-error">
-            Something went wrong. Please try again.
-          </p>
+          <p className="field-error">Something went wrong. Please try again.</p>
         )}
       </form>
     </div>

@@ -12,18 +12,36 @@
 .my-claims-login a { color: #e85d3f; font-weight: 600; }
 
 .claim-row {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 18px 20px;
   margin-bottom: 10px;
   background: #ffffff;
   border: 1px solid #ddd9d0;
   border-radius: 12px;
-  color: inherit;
-  text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .claim-row:hover { transform: translateY(-2px); border-color: rgba(232, 93, 63, 0.2); box-shadow: 0 12px 28px rgba(30, 30, 25, 0.08); }
-.claim-row strong { font-size: 14px; }
+
+.claim-row-link { flex: 1; color: inherit; text-decoration: none; min-width: 0; }
+.claim-row-link strong { font-size: 14px; }
+
+.claim-download-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid #e85d3f;
+  border-radius: 999px;
+  background: transparent;
+  color: #e85d3f;
+  font-size: 12px;
+  font-weight: 650;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.claim-download-btn:hover { background: rgba(232, 93, 63, 0.08); }
 
 .claim-status-badge {
   display: inline-block;

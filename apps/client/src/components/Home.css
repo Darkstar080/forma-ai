@@ -383,21 +383,48 @@
 }
 
 .story-input {
-  min-height: 105px;
+  width: 100%;
+  min-height: 120px;
   margin-top: 14px;
   padding: 16px;
 
-  border-radius: 10px;
+  box-sizing: border-box;
+
+  border: 1px solid #d8d4ca;
+  border-radius: 12px;
 
   background: #f8f6f1;
   color: #454640;
 
+  font-family: inherit;
   font-size: 14px;
   line-height: 1.6;
 
+  resize: vertical;
+
+  outline: none;
+
   transition:
     background 0.25s ease,
+    border-color 0.25s ease,
     box-shadow 0.25s ease;
+}
+
+.story-input::placeholder {
+  color: #92938d;
+}
+
+.story-input:focus {
+  border-color: rgba(232, 93, 63, 0.55);
+
+  background: #faf8f4;
+
+  box-shadow:
+    0 0 0 3px rgba(232, 93, 63, 0.1);
+}
+
+.story-card:hover .story-input {
+  background: #faf8f4;
 }
 
 .story-card:hover .story-input {

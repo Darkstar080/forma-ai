@@ -1,8 +1,32 @@
 import { Router } from "express";
 import FormSchemaDefinition from "../models/FormSchema.js";
-import { extractFromText } from "../services/extraction.js";
+import {
+  extractFromText,
+  extractMagicClaimFromText,
+} from "../services/extraction.js";
 
 const router = Router();
+
+router.post("/magic", async (req, res) => {
+  const { text } = req.body;
+
+  if (!text || typeof text !== "string" || !text.trim()) {
+    return res.status(400).json({ error: '"text" is required' });
+  }
+
+  try {
+    const { extracted, missing } = await extractMagicClaimFromText(
+      text.trim()
+    );
+
+    res.json({ extracted, missing });
+  } catch (err) {
+    console.error("Magic claim extraction error:", err);
+    res.status(500).json({
+      error: err?.message || "Magic claim extraction failed",
+    });
+  }
+});
 
 router.post("/:formId", async (req, res) => {
   const { text } = req.body;
@@ -18,7 +42,7 @@ router.post("/:formId", async (req, res) => {
     res.json({ extracted, missing });
   } catch (err) {
     console.error("Extraction error:", err);
-    res.status(500).json({ error: "Extraction failed" });
+    res.status(500).json({ error: err?.message || "Extraction failed" });
   }
 });
 

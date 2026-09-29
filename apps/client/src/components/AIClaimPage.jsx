@@ -8,6 +8,7 @@ import "./AIClaimPage.css";
 function AIClaimPage() {
   const [stage, setStage] = useState("processing");
   const [description, setDescription] = useState("");
+  const [extractedData, setExtractedData] = useState({});
   const [claimData, setClaimData] = useState({});
   const [error, setError] = useState("");
 
@@ -16,30 +17,54 @@ function AIClaimPage() {
       "forma_claim_description"
     );
 
-    const storedClaim = sessionStorage.getItem(
-      "forma_magic_claim"
-    );
-
-    if (!storedClaim) {
-      setError(
-        "No saved claim found. Run the Magic Box extraction once first."
-      );
+    if (!storedDescription?.trim()) {
+      setError("No claim description was provided.");
       setStage("error");
       return;
     }
 
-    try {
-      const parsedClaim = JSON.parse(storedClaim);
+    setDescription(storedDescription);
 
-      setDescription(storedDescription || "");
-      setClaimData(parsedClaim);
-      setStage("preview");
-    } catch (err) {
-      console.error("Saved claim error:", err);
+    const extractClaim = async () => {
+      try {
+        setStage("processing");
 
-      setError("Saved claim data is invalid.");
-      setStage("error");
-    }
+        const response = await fetch("/api/extract/magic", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: storedDescription.trim(),
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data?.message ||
+              data?.error ||
+              "Unable to process your claim."
+          );
+        }
+
+        setExtractedData(data.extracted || {});
+        setClaimData(data.extracted || {});
+        setStage("form");
+      } catch (err) {
+        console.error("AI extraction error:", err);
+
+        setError(
+          err.message ||
+            "Something went wrong while processing your claim."
+        );
+
+        setStage("error");
+      }
+    };
+
+    extractClaim();
   }, []);
 
   /* =========================
@@ -54,10 +79,10 @@ function AIClaimPage() {
 
           <p className="ai-eyebrow">FORMA AI</p>
 
-          <h1>Loading your claim</h1>
+          <h1>Preparing your claim</h1>
 
           <p>
-            We're preparing your saved claim information.
+            AI is extracting the information from your description.
           </p>
 
           <div className="ai-loader" />
@@ -76,7 +101,7 @@ function AIClaimPage() {
         <div className="ai-error-card">
           <p className="ai-eyebrow">FORMA AI</p>
 
-          <h1>We couldn't load your claim.</h1>
+          <h1>We couldn't process your claim.</h1>
 
           <p>{error}</p>
 
@@ -140,7 +165,7 @@ function AIClaimPage() {
   }
 
   /* =========================
-     EDIT CLAIM FORM
+     CLAIM FORM
   ========================= */
 
   return (
@@ -181,11 +206,12 @@ function AIClaimPage() {
         <section className="ai-intro-section">
           <p className="ai-eyebrow">AI-ASSISTED CLAIM</p>
 
-          <h1>Edit your claim.</h1>
+          <h1>Complete your claim.</h1>
 
           <p className="ai-intro-text">
-            Review or update any claim information before generating
-            your claim document.
+            We've pre-filled your claim using the information from
+            your description. Review or update anything before
+            continuing.
           </p>
         </section>
 
@@ -196,7 +222,7 @@ function AIClaimPage() {
 
               <div>
                 <strong>Claim details identified</strong>
-                <span>Saved claim</span>
+                <span>AI extraction complete</span>
               </div>
             </div>
 
@@ -214,8 +240,8 @@ function AIClaimPage() {
               <span>✦</span>
 
               <p>
-                You can review and change every detail before
-                generating the claim document.
+                AI only uses information provided in your
+                description. Review every detail before continuing.
               </p>
             </div>
           </aside>
@@ -227,17 +253,17 @@ function AIClaimPage() {
                   AUTO INSURANCE CLAIM
                 </p>
 
-                <h2>Edit claim information</h2>
+                <h2>Claim information</h2>
               </div>
 
               <span className="ai-form-badge">
-                SAVED CLAIM
+                AI PREFILLED
               </span>
             </div>
 
             <p className="ai-form-description">
-              Update any information that needs to be corrected or
-              completed.
+              Review the information below and complete anything
+              that is missing.
             </p>
 
             <div className="ai-form-container">

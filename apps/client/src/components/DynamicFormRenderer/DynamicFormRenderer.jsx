@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { evaluateConditions } from "@forma-ai/shared";
 import { authFetch, isLoggedIn } from "../../lib/api";
 import { useFormSchema } from "../../hooks/useFormSchema";
@@ -10,7 +10,9 @@ function cleanVisibleData(schema, data) {
   const visibleFieldIds = schema.fields
     .filter((f) => evaluateConditions(f.showIf, data))
     .map((f) => f.fieldId);
-  return Object.fromEntries(Object.entries(data).filter(([key]) => visibleFieldIds.includes(key)));
+  return Object.fromEntries(
+    Object.entries(data).filter(([key]) => visibleFieldIds.includes(key))
+  );
 }
 
 function DynamicFormRenderer({
@@ -18,7 +20,7 @@ function DynamicFormRenderer({
   description,
   resumeId,
   initialValues = {},
-  onSubmit,
+  onSubmit: customOnSubmit,
   submitLabel = "Submit Claim",
   showDraftButton = true,
 }) {
@@ -27,7 +29,7 @@ function DynamicFormRenderer({
     register,
     handleSubmit,
     watch,
-setValue,
+    setValue,
     reset,
     formState: { errors },
   } = useForm({
@@ -71,17 +73,17 @@ setValue,
         // silent — user can still fill the form manually
       }
     })();
-  }, [resumeId]);
+  }, [resumeId, reset]);
 
   if (loading) return <p>Loading form...</p>;
   if (error) return <p>Failed to load form: {error}</p>;
   if (!schema) return null;
 
   const visibleFields = schema.fields.filter((field) =>
-    evaluateConditions(field.showIf, values),
+    evaluateConditions(field.showIf, values)
   );
 
-const handleMagicExtract = async () => {
+  const handleMagicExtract = async () => {
     if (!magicText.trim()) return;
     setExtracting(true);
     setExtractError(null);
@@ -94,7 +96,11 @@ const handleMagicExtract = async () => {
       if (res.status === 429) {
         throw new Error("Too many requests right now. Wait a minute and try again.");
       }
-      if (!res.ok) throw new Error("Could not read your description. Please fill in the form manually.");
+      if (!res.ok) {
+        throw new Error(
+          "Could not read your description. Please fill in the form manually."
+        );
+      }
 
       const { extracted, missing } = await res.json();
       Object.entries(extracted).forEach(([fieldId, value]) => {
@@ -118,7 +124,9 @@ const handleMagicExtract = async () => {
     const cleanedData = cleanVisibleData(schema, watch());
     try {
       const method = submissionId ? "PUT" : "POST";
-      const url = submissionId ? `/api/submissions/${submissionId}` : "/api/submissions";
+      const url = submissionId
+        ? `/api/submissions/${submissionId}`
+        : "/api/submissions";
       const res = await authFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -170,7 +178,9 @@ const handleMagicExtract = async () => {
 
     try {
       const method = submissionId ? "PUT" : "POST";
-      const url = submissionId ? `/api/submissions/${submissionId}` : "/api/submissions";
+      const url = submissionId
+        ? `/api/submissions/${submissionId}`
+        : "/api/submissions";
       const res = await authFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -185,12 +195,12 @@ const handleMagicExtract = async () => {
       setSubmitStatus("error");
     }
   };
-  };
 
   const renderField = (field) => {
     const rules = {
-required: field.validation?.required ? "This field is required" : false,
+      required: field.validation?.required ? "This field is required" : false,
     };
+
     if (field.validation?.regex) {
       rules.pattern = {
         value: new RegExp(field.validation.regex),
@@ -211,10 +221,6 @@ required: field.validation?.required ? "This field is required" : false,
         message: `Maximum is ${field.validation.max}`,
       };
     }
-if (field.validation?.min !== undefined)
-      rules.min = { value: field.validation.min, message: `Minimum is ${field.validation.min}` };
-    if (field.validation?.max !== undefined)
-      rules.max = { value: field.validation.max, message: `Maximum is ${field.validation.max}` };
 
     switch (field.type) {
       case "select":
@@ -313,8 +319,12 @@ if (field.validation?.min !== undefined)
         <div className="resume-banner">
           <p>You have a saved draft for this form.</p>
           <div className="resume-banner-actions">
-            <button type="button" onClick={handleResumeDraft}>Continue draft</button>
-            <button type="button" onClick={handleDismissResume}>Start fresh</button>
+            <button type="button" onClick={handleResumeDraft}>
+              Continue draft
+            </button>
+            <button type="button" onClick={handleDismissResume}>
+              Start fresh
+            </button>
           </div>
         </div>
       )}
@@ -380,7 +390,7 @@ if (field.validation?.min !== undefined)
           <p className="required-note">
             <span>*</span> Required fields
           </p>
-<div className="form-actions">
+          <div className="form-actions">
             {showDraftButton && (
               <button
                 type="button"
@@ -397,7 +407,6 @@ if (field.validation?.min !== undefined)
               disabled={submitStatus === "submitting"}
             >
               {submitStatus === "submitting" ? "Submitting..." : submitLabel}
-            </button>
             </button>
           </div>
         </div>

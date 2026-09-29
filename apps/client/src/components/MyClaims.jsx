@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { authFetch, isLoggedIn } from "../lib/api";
+import "./MyClaims.css";
 
 function MyClaims() {
   const [claims, setClaims] = useState([]);
@@ -18,25 +19,44 @@ function MyClaims() {
   }, []);
 
   if (!isLoggedIn()) {
-    return <p style={{ padding: "2rem" }}>Please <Link to="/login">log in</Link> to see your claims.</p>;
+    return (
+      <div className="my-claims-page">
+        <div className="my-claims-inner">
+          <p className="my-claims-login">Please <Link to="/login">log in</Link> to see your claims.</p>
+        </div>
+      </div>
+    );
   }
-  if (loading) return <p style={{ padding: "2rem" }}>Loading your claims...</p>;
-  if (!claims.length) return <p style={{ padding: "2rem" }}>You have no saved claims yet.</p>;
+  if (loading) {
+    return (
+      <div className="my-claims-page">
+        <div className="my-claims-inner"><p className="my-claims-empty">Loading your claims...</p></div>
+      </div>
+    );
+  }
+  if (!claims.length) {
+    return (
+      <div className="my-claims-page">
+        <div className="my-claims-inner">
+          <h2>My Claims</h2>
+          <p className="my-claims-empty">You have no saved claims yet.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "2rem", maxWidth: 600, margin: "0 auto" }}>
-      <h2>My Claims</h2>
-      {claims.map((c) => (
-        <Link
-          key={c._id}
-          to={`/claim?formId=${c.formId}&resume=${c._id}`}
-          style={{ display: "block", padding: "12px 0", borderBottom: "1px solid #e2e8f0", color: "inherit", textDecoration: "none" }}
-        >
-          <strong>{c.formId}</strong> — {c.status}
-          <br />
-          <small>Last updated: {new Date(c.updatedAt).toLocaleString()}</small>
-        </Link>
-      ))}
+    <div className="my-claims-page">
+      <div className="my-claims-inner">
+        <h2>My Claims</h2>
+        {claims.map((c) => (
+          <Link key={c._id} to={`/claim?formId=${c.formId}&resume=${c._id}`} className="claim-row">
+            <strong>{c.formId}</strong>
+            <span className={`claim-status-badge ${c.status}`}>{c.status}</span>
+            <small>Last updated: {new Date(c.updatedAt).toLocaleString()}</small>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

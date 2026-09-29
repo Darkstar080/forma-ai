@@ -5,6 +5,7 @@ import schemaRoutes from "./routes/schemas.js";
 import mongoose from "mongoose";
 import extractRoutes from "./routes/extract.js";
 import submissionRoutes from "./routes/submissions.js";
+import authRoutes from "./routes/auth.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/schemas", schemaRoutes);
 app.use("/api/extract", extractRoutes);
 app.use("/api/submissions", submissionRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });

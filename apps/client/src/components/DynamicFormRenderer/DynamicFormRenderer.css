@@ -268,3 +268,13 @@
 .magic-input-button:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .ai-flag { display: block; margin-top: 6px; padding: 6px 9px; background: #fff7ed; border: 1px solid #fdba74; border-radius: 6px; color: #9a3412; font-size: 12px; }
+.ai-verify-tag {
+  display: block;
+  margin-top: 6px;
+  padding: 6px 9px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  color: #1e40af;
+  font-size: 12px;
+}

@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { evaluateConditions } from "@forma-ai/shared";
 import { authFetch, isLoggedIn } from "../../lib/api";
 import { useFormSchema } from "../../hooks/useFormSchema";
 import "./DynamicFormRenderer.css";
 
-function DynamicFormRenderer({ formId, description }) {
+function cleanVisibleData(schema, data) {
+  const visibleFieldIds = schema.fields
+    .filter((f) => evaluateConditions(f.showIf, data))
+    .map((f) => f.fieldId);
+  return Object.fromEntries(Object.entries(data).filter(([key]) => visibleFieldIds.includes(key)));
+}
+
+function DynamicFormRenderer({ formId, description, resumeId }) {
   const { schema, loading, error } = useFormSchema(formId);
   const {
     register,
@@ -26,17 +33,35 @@ function DynamicFormRenderer({ formId, description }) {
   const [extracting, setExtracting] = useState(false);
   const [extractError, setExtractError] = useState(null);
   const [aiMissingFields, setAiMissingFields] = useState([]);
+  const [aiFilledFields, setAiFilledFields] = useState([]);
 
   const [showResumeBanner, setShowResumeBanner] = useState(false);
   const [savedDraftId, setSavedDraftId] = useState(null);
 
+  // Explicit resume (e.g. clicked from My Claims) takes priority over the generic banner
   useEffect(() => {
+    if (resumeId) return;
     const stored = localStorage.getItem(`forma-draft-${formId}`);
     if (stored) {
       setSavedDraftId(stored);
       setShowResumeBanner(true);
     }
-  }, [formId]);
+  }, [formId, resumeId]);
+
+  useEffect(() => {
+    if (!resumeId) return;
+    (async () => {
+      try {
+        const res = await authFetch(`/api/submissions/${resumeId}`);
+        if (!res.ok) return;
+        const submission = await res.json();
+        reset(submission.data);
+        setSubmissionId(submission._id);
+      } catch {
+        // silent — user can still fill the form manually
+      }
+    })();
+  }, [resumeId]);
 
   if (loading) return <p>Loading form...</p>;
   if (error) return <p>Failed to load form: {error}</p>;
@@ -65,6 +90,7 @@ function DynamicFormRenderer({ formId, description }) {
       Object.entries(extracted).forEach(([fieldId, value]) => {
         setValue(fieldId, value, { shouldValidate: true });
       });
+      setAiFilledFields(Object.keys(extracted));
       setAiMissingFields(missing);
     } catch (err) {
       setExtractError(err.message);
@@ -79,14 +105,14 @@ function DynamicFormRenderer({ formId, description }) {
       return;
     }
     setSaveStatus("saving");
-    const currentData = watch();
+    const cleanedData = cleanVisibleData(schema, watch());
     try {
       const method = submissionId ? "PUT" : "POST";
       const url = submissionId ? `/api/submissions/${submissionId}` : "/api/submissions";
       const res = await authFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formId, data: currentData, status: "draft" }),
+        body: JSON.stringify({ formId, data: cleanedData, status: "draft" }),
       });
       if (!res.ok) throw new Error("Save failed");
       const saved = await res.json();
@@ -125,13 +151,7 @@ function DynamicFormRenderer({ formId, description }) {
       return;
     }
     setSubmitStatus("submitting");
-
-    const visibleFieldIds = schema.fields
-      .filter((f) => evaluateConditions(f.showIf, data))
-      .map((f) => f.fieldId);
-    const cleanedData = Object.fromEntries(
-      Object.entries(data).filter(([key]) => visibleFieldIds.includes(key)),
-    );
+    const cleanedData = cleanVisibleData(schema, data);
 
     try {
       const method = submissionId ? "PUT" : "POST";
@@ -257,6 +277,9 @@ function DynamicFormRenderer({ formId, description }) {
               <span className="ai-flag">
                 AI could not find this in your description. Please fill it in.
               </span>
+            )}
+            {aiFilledFields.includes(field.fieldId) && (
+              <span className="ai-verify-tag">Filled by AI — please verify</span>
             )}
           </div>
         ))}

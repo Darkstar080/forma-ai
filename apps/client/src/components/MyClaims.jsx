@@ -27,11 +27,15 @@ function MyClaims() {
     <div style={{ padding: "2rem", maxWidth: 600, margin: "0 auto" }}>
       <h2>My Claims</h2>
       {claims.map((c) => (
-        <div key={c._id} style={{ padding: "12px 0", borderBottom: "1px solid #e2e8f0" }}>
+        <Link
+          key={c._id}
+          to={`/claim?formId=${c.formId}&resume=${c._id}`}
+          style={{ display: "block", padding: "12px 0", borderBottom: "1px solid #e2e8f0", color: "inherit", textDecoration: "none" }}
+        >
           <strong>{c.formId}</strong> — {c.status}
           <br />
           <small>Last updated: {new Date(c.updatedAt).toLocaleString()}</small>
-        </div>
+        </Link>
       ))}
     </div>
   );

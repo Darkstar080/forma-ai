@@ -241,3 +241,30 @@
     width: 100%;
   }
 }
+
+.resume-banner {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+}
+.resume-banner p { margin: 0 0 10px; color: #1e40af; font-size: 14px; }
+.resume-banner-actions { display: flex; gap: 10px; }
+.resume-banner-actions button { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.resume-banner-actions button:first-child { border: none; background: #2563eb; color: #fff; }
+.resume-banner-actions button:last-child { border: 1px solid #93c5fd; background: transparent; color: #1e40af; }
+
+.magic-input-section {
+  margin-bottom: 28px;
+  padding: 20px;
+  background: #f8fafc;
+  border: 1px dashed #94a3b8;
+  border-radius: 10px;
+}
+.magic-input-section label { display: block; margin-bottom: 8px; color: #334155; font-size: 14px; font-weight: 600; }
+.magic-input-section textarea { width: 100%; box-sizing: border-box; padding: 11px 13px; border: 1px solid #cbd5e1; border-radius: 7px; font-family: inherit; font-size: 14px; min-height: 80px; resize: vertical; }
+.magic-input-button { margin-top: 10px; padding: 9px 16px; border: none; border-radius: 7px; background: #2563eb; color: #fff; font-weight: 600; cursor: pointer; }
+.magic-input-button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.ai-flag { display: block; margin-top: 6px; padding: 6px 9px; background: #fff7ed; border: 1px solid #fdba74; border-radius: 6px; color: #9a3412; font-size: 12px; }

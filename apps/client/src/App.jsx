@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import FormPicker from "./components/FormPicker";
 import DynamicFormRenderer from "./components/DynamicFormRenderer/DynamicFormRenderer";
+import AuthPage from "./components/Auth/AuthPage";
+import MyClaims from "./components/MyClaims";
 
 function ClaimPage() {
   const [formId, setFormId] = useState("auto_insurance_claim_v1");
@@ -25,6 +27,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/claim" element={<ClaimPage />} />
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/my-claims" element={<MyClaims />} />
     </Routes>
   );
 }

@@ -37,7 +37,7 @@ function ScrollReveal({ children, className = "" }) {
       {
         threshold: 0.12,
         rootMargin: "0px 0px -60px 0px",
-      }
+      },
     );
 
     observer.observe(element);
@@ -50,9 +50,7 @@ function ScrollReveal({ children, className = "" }) {
   return (
     <div
       ref={revealRef}
-      className={`forma-reveal ${
-        isVisible ? "is-visible" : ""
-      } ${className}`}
+      className={`forma-reveal ${isVisible ? "is-visible" : ""} ${className}`}
     >
       {children}
     </div>
@@ -69,7 +67,15 @@ function Home({ children }) {
   useEffect(() => {
     localStorage.setItem("forma-theme", darkMode ? "dark" : "light");
   }, [darkMode]);
+  const [authEmail, setAuthEmail] = useState(() =>
+    localStorage.getItem("forma-auth-email"),
+  );
 
+  const handleLogout = () => {
+    localStorage.removeItem("forma-auth-token");
+    localStorage.removeItem("forma-auth-email");
+    setAuthEmail(null);
+  };
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
   };
@@ -79,11 +85,7 @@ function Home({ children }) {
   };
 
   return (
-    <div
-      className={`forma-home ${
-        darkMode ? "dark-mode" : "light-mode"
-      }`}
-    >
+    <div className={`forma-home ${darkMode ? "dark-mode" : "light-mode"}`}>
       <style>{`
         /* =====================================================
            FORMA AI GLOBAL DARK / LIGHT THEME
@@ -584,6 +586,17 @@ function Home({ children }) {
             <a href="#features">Features</a>
             <a href="#claims">Claims</a>
             <a href="#support">Support</a>
+            {authEmail ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="forma-nav-logout"
+              >
+                Log out
+              </button>
+            ) : (
+              <Link to="/login">Log in</Link>
+            )}
           </nav>
 
           <div
@@ -598,9 +611,7 @@ function Home({ children }) {
               className="forma-theme-toggle"
               onClick={toggleTheme}
               aria-label={
-                darkMode
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
+                darkMode ? "Switch to light mode" : "Switch to dark mode"
               }
               title={darkMode ? "Light mode" : "Dark mode"}
             >
@@ -615,12 +626,8 @@ function Home({ children }) {
           <button
             type="button"
             className="mobile-menu-button"
-            onClick={() =>
-              setMobileMenuOpen((open) => !open)
-            }
-            aria-label={
-              mobileMenuOpen ? "Close menu" : "Open menu"
-            }
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? "×" : "☰"}
@@ -629,31 +636,19 @@ function Home({ children }) {
 
         {mobileMenuOpen && (
           <div className="mobile-nav">
-            <a
-              href="#how-it-works"
-              onClick={closeMobileMenu}
-            >
+            <a href="#how-it-works" onClick={closeMobileMenu}>
               How it works
             </a>
 
-            <a
-              href="#features"
-              onClick={closeMobileMenu}
-            >
+            <a href="#features" onClick={closeMobileMenu}>
               Features
             </a>
 
-            <a
-              href="#claims"
-              onClick={closeMobileMenu}
-            >
+            <a href="#claims" onClick={closeMobileMenu}>
               Claims
             </a>
 
-            <a
-              href="#support"
-              onClick={closeMobileMenu}
-            >
+            <a href="#support" onClick={closeMobileMenu}>
               Support
             </a>
 
@@ -662,11 +657,24 @@ function Home({ children }) {
               className="forma-mobile-theme"
               onClick={toggleTheme}
             >
-              {darkMode
-                ? "☀  Light mode"
-                : "☾  Dark mode"}
+              {darkMode ? "☀  Light mode" : "☾  Dark mode"}
             </button>
-
+            {authEmail ? (
+              <button
+                type="button"
+                className="forma-mobile-theme"
+                onClick={() => {
+                  handleLogout();
+                  closeMobileMenu();
+                }}
+              >
+                Log out ({authEmail})
+              </button>
+            ) : (
+              <Link to="/login" onClick={closeMobileMenu}>
+                Log in
+              </Link>
+            )}
             <Link
               to="/claim"
               className="mobile-nav-cta"
@@ -700,9 +708,7 @@ function Home({ children }) {
         </ScrollReveal>
 
         <ScrollReveal className="forma-reveal-delay-5">
-          <section className="existing-form-section">
-            {children}
-          </section>
+          <section className="existing-form-section">{children}</section>
         </ScrollReveal>
 
         <ScrollReveal className="forma-reveal-delay-6">

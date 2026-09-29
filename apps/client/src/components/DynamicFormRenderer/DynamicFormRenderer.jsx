@@ -13,7 +13,6 @@ function cleanVisibleData(schema, data) {
 return Object.fromEntries(
     Object.entries(data).filter(([key]) => visibleFieldIds.includes(key))
   );
-  );
 }
 
 function DynamicFormRenderer({

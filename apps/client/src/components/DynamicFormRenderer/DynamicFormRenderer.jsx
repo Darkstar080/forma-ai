@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { evaluateConditions } from "@forma-ai/shared";
 import { authFetch, isLoggedIn } from "../../lib/api";
 import { useFormSchema } from "../../hooks/useFormSchema";
@@ -10,11 +10,9 @@ function cleanVisibleData(schema, data) {
   const visibleFieldIds = schema.fields
     .filter((f) => evaluateConditions(f.showIf, data))
     .map((f) => f.fieldId);
-
-  return Object.fromEntries(
-    Object.entries(data).filter(([key]) =>
-      visibleFieldIds.includes(key)
-    )
+return Object.fromEntries(
+    Object.entries(data).filter(([key]) => visibleFieldIds.includes(key))
+  );
   );
 }
 
@@ -23,7 +21,7 @@ function DynamicFormRenderer({
   description,
   resumeId,
   initialValues = {},
-  onSubmit,
+  onSubmit: customOnSubmit,
   submitLabel = "Submit Claim",
   showDraftButton = true,
 }) {
@@ -122,6 +120,11 @@ function DynamicFormRenderer({
           "Could not read your description. Please fill in the form manually."
         );
       }
+if (!res.ok) {
+        throw new Error(
+          "Could not read your description. Please fill in the form manually."
+        );
+      }
 
       const { extracted, missing } = await res.json();
 
@@ -152,11 +155,9 @@ function DynamicFormRenderer({
 
     try {
       const method = submissionId ? "PUT" : "POST";
-
-      const url = submissionId
+const url = submissionId
         ? `/api/submissions/${submissionId}`
         : "/api/submissions";
-
       const res = await authFetch(url, {
         method,
         headers: {
@@ -231,11 +232,9 @@ function DynamicFormRenderer({
 
     try {
       const method = submissionId ? "PUT" : "POST";
-
-      const url = submissionId
+const url = submissionId
         ? `/api/submissions/${submissionId}`
         : "/api/submissions";
-
       const res = await authFetch(url, {
         method,
         headers: {
@@ -264,9 +263,7 @@ function DynamicFormRenderer({
 
   const renderField = (field) => {
     const rules = {
-      required: field.validation?.required
-        ? "This field is required"
-        : false,
+required: field.validation?.required ? "This field is required" : false,
     };
 
     if (field.validation?.regex) {
@@ -388,17 +385,11 @@ function DynamicFormRenderer({
           <p>You have a saved draft for this form.</p>
 
           <div className="resume-banner-actions">
-            <button
-              type="button"
-              onClick={handleResumeDraft}
-            >
+<button type="button" onClick={handleResumeDraft}>
               Continue draft
             </button>
 
-            <button
-              type="button"
-              onClick={handleDismissResume}
-            >
+            <button type="button" onClick={handleDismissResume}>
               Start fresh
             </button>
           </div>

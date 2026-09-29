@@ -1,6 +1,7 @@
 import { Router } from "express";
 import FormSchemaDefinition from "../models/FormSchema.js";
 import { validateSchemaFields } from "../services/schemaValidation.js";
+import { requireAuth } from "../middleware/requireAuth.js";
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.get("/:formId", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", requireAuth, async (req, res) => {
   const { formId, title, fields } = req.body;
   if (!formId || !title || !Array.isArray(fields)) {
     return res.status(400).json({ error: "formId, title, and fields[] are required" });
@@ -44,7 +45,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:formId", async (req, res) => {
+router.put("/:formId", requireAuth, async (req, res) => {
   const { title, fields } = req.body;
   if (!title || !Array.isArray(fields)) {
     return res.status(400).json({ error: "title and fields[] are required" });
